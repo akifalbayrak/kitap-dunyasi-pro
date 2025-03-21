@@ -6,6 +6,9 @@
         <router-link :to="'/edit-book/' + book.id">
             <button>Düzenle</button>
         </router-link>
+
+        <!-- Yorum bileşenini ekliyoruz -->
+        <CommentsSection />
     </div>
     <div v-else>
         <p>Kitap bulunamadı.</p>
@@ -16,6 +19,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
+import CommentsSection from "../components/CommentsSection.vue";
 
 const store = useStore();
 const route = useRoute();
