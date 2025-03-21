@@ -11,6 +11,15 @@ const mutations = {
         state.books = state.books.filter((book) => book.id !== bookId);
         localStorage.setItem("books", JSON.stringify(state.books));
     },
+    UPDATE_BOOK(state, updatedBook) {
+        const index = state.books.findIndex(
+            (book) => book.id === updatedBook.id
+        );
+        if (index !== -1) {
+            state.books.splice(index, 1, updatedBook);
+            localStorage.setItem("books", JSON.stringify(state.books));
+        }
+    },
 };
 
 const actions = {
@@ -19,6 +28,9 @@ const actions = {
     },
     deleteBook({ commit }, bookId) {
         commit("DELETE_BOOK", bookId);
+    },
+    updateBook({ commit }, updatedBook) {
+        commit("UPDATE_BOOK", updatedBook);
     },
 };
 

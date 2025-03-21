@@ -3,6 +3,12 @@
         <h2>{{ book.title }}</h2>
         <p>Yazar: {{ book.author }}</p>
         <button @click="addToFavorites">Favorilere Ekle</button>
+        <router-link :to="'/edit-book/' + book.id">
+            <button>Düzenle</button>
+        </router-link>
+    </div>
+    <div v-else>
+        <p>Kitap bulunamadı.</p>
     </div>
 </template>
 
