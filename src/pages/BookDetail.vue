@@ -2,7 +2,12 @@
     <div v-if="book">
         <h2>{{ book.title }}</h2>
         <p>Yazar: {{ book.author }}</p>
-        <button @click="addToFavorites">Favorilere Ekle</button>
+
+        <!-- Toggle button to add/remove from favorites -->
+        <button @click="toggleFavorite">
+            {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
+        </button>
+
         <router-link :to="'/edit-book/' + book.id">
             <button>Düzenle</button>
         </router-link>
@@ -29,7 +34,15 @@ const book = computed(() =>
     books.value.find((book) => book.id == route.params.id)
 );
 
-const addToFavorites = () => {
-    store.dispatch("favorites/addToFavorites", book.value);
+const isFavorite = computed(() =>
+    store.getters["favorites/isFavorite"](book.value?.id)
+);
+
+const toggleFavorite = () => {
+    if (isFavorite.value) {
+        store.dispatch("favorites/removeFromFavorites", book.value.id);
+    } else {
+        store.dispatch("favorites/addToFavorites", book.value);
+    }
 };
 </script>
