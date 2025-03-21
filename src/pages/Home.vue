@@ -7,6 +7,7 @@
                     <h3>{{ book.title }}</h3>
                 </router-link>
                 <p>{{ book.author }}</p>
+                <p>{{ book.price }} {{ book.currency }}</p>
             </div>
         </div>
         <p v-else>Henüz kitap eklenmedi.</p>

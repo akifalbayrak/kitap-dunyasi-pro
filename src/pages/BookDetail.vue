@@ -2,7 +2,7 @@
     <div v-if="book">
         <h2>{{ book.title }}</h2>
         <p>Yazar: {{ book.author }}</p>
-        <p>Fiyat: {{ convertedPrice }}</p>
+        <p>Fiyat: {{ convertedPrice }} {{ book.currency }}</p>
 
         <button @click="toggleFavorite">
             {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
