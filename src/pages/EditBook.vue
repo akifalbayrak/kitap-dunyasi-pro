@@ -11,6 +11,14 @@
                 <input v-model="book.author" type="text" id="author" required />
             </div>
             <div>
+                <label for="price">Fiyat (USD)</label>
+                <input
+                    v-model.number="book.price"
+                    type="number"
+                    id="price"
+                    required />
+            </div>
+            <div>
                 <button type="submit">Kitap Güncelle</button>
             </div>
         </form>

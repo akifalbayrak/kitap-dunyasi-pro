@@ -2,6 +2,7 @@
     <div v-if="book">
         <h2>{{ book.title }}</h2>
         <p>Yazar: {{ book.author }}</p>
+        <p>Fiyat: {{ convertedPrice }}</p>
 
         <!-- Toggle button to add/remove from favorites -->
         <button @click="toggleFavorite">
@@ -49,6 +50,13 @@ const toggleFavorite = () => {
         store.dispatch("favorites/addToFavorites", book.value);
     }
 };
+// Compute the price in the selected currency using the getter
+const convertedPrice = computed(() => {
+    if (book.value && store.getters["books/getPriceInCurrency"]) {
+        return store.getters["books/getPriceInCurrency"](book.value.price);
+    }
+    return book.value?.price;
+});
 
 const deleteBook = () => {
     if (confirm("Kitabı silmek istediğinizden emin misiniz?")) {

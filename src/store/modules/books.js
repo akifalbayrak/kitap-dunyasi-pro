@@ -1,5 +1,7 @@
 const state = {
     books: JSON.parse(localStorage.getItem("books")) || [],
+    rates: {},
+    baseCurrency: "USD",
 };
 
 const mutations = {
@@ -20,6 +22,12 @@ const mutations = {
             localStorage.setItem("books", JSON.stringify(state.books));
         }
     },
+    SET_RATES(state, rates) {
+        state.rates = rates;
+    },
+    SET_BASE_CURRENCY(state, currency) {
+        state.baseCurrency = currency;
+    },
 };
 
 const actions = {
@@ -32,10 +40,24 @@ const actions = {
     updateBook({ commit }, updatedBook) {
         commit("UPDATE_BOOK", updatedBook);
     },
+    setRates({ commit }, rates) {
+        commit("SET_RATES", rates);
+    },
+    setBaseCurrency({ commit }, currency) {
+        commit("SET_BASE_CURRENCY", currency);
+    },
 };
 
 const getters = {
     books: (state) => state.books,
+    getPriceInCurrency: (state) => (bookPrice) => {
+        // Convert the price to the selected currency
+        const rate = state.rates[state.baseCurrency];
+        if (rate) {
+            return (bookPrice * rate).toFixed(2);
+        }
+        return bookPrice;
+    },
 };
 
 export default {
