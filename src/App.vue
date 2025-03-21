@@ -1,47 +1,32 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div :class="{ dark: isDarkMode }">
+        <Header />
+        <header>
+            <button @click="toggleDarkMode">Gece Modu</button>
+        </header>
+        <router-view />
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<script setup>
+import { ref, onMounted } from "vue";
+import Header from "./layouts/Header.vue";
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+const isDarkMode = ref(JSON.parse(localStorage.getItem("darkMode")) || false);
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+const toggleDarkMode = () => {
+    isDarkMode.value = !isDarkMode.value;
+    localStorage.setItem("darkMode", JSON.stringify(isDarkMode.value));
+};
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+onMounted(() => {
+    isDarkMode.value = JSON.parse(localStorage.getItem("darkMode")) || false;
+});
+</script>
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+<style>
+.dark {
+    background-color: #333;
+    color: white;
 }
 </style>
