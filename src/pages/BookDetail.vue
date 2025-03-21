@@ -8,6 +8,9 @@
             {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
         </button>
 
+        <!-- Button for deleting the book -->
+        <button @click="deleteBook" class="text-red-500">Kitabı Sil</button>
+
         <router-link :to="'/edit-book/' + book.id">
             <button>Düzenle</button>
         </router-link>
@@ -23,11 +26,12 @@
 <script setup>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import CommentsSection from "../components/CommentsSection.vue";
 
 const store = useStore();
 const route = useRoute();
+const router = useRouter();
 
 const books = computed(() => store.state.books.books);
 const book = computed(() =>
@@ -43,6 +47,13 @@ const toggleFavorite = () => {
         store.dispatch("favorites/removeFromFavorites", book.value.id);
     } else {
         store.dispatch("favorites/addToFavorites", book.value);
+    }
+};
+
+const deleteBook = () => {
+    if (confirm("Kitabı silmek istediğinizden emin misiniz?")) {
+        store.dispatch("books/deleteBook", book.value.id);
+        router.push("/"); // Redirect to the homepage after deletion
     }
 };
 </script>
