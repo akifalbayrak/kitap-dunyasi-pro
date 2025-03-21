@@ -2,7 +2,8 @@ import axios from "axios";
 
 // API base URL
 const api = axios.create({
-    baseURL: "https://api.exchangerate-api.com/v4/latest/", // Örnek dış API
+    baseURL:
+        "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_B0ZftLGW9xq4r0CmkK0KCZu78T54zNANyEUaqA7u",
 });
 
 // Error handling interceptor

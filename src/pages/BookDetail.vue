@@ -4,19 +4,16 @@
         <p>Yazar: {{ book.author }}</p>
         <p>Fiyat: {{ convertedPrice }}</p>
 
-        <!-- Toggle button to add/remove from favorites -->
         <button @click="toggleFavorite">
             {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
         </button>
 
-        <!-- Button for deleting the book -->
         <button @click="deleteBook" class="text-red-500">Kitabı Sil</button>
 
         <router-link :to="'/edit-book/' + book.id">
             <button>Düzenle</button>
         </router-link>
 
-        <!-- Yorum bileşenini ekliyoruz -->
         <CommentsSection />
     </div>
     <div v-else>
@@ -50,6 +47,7 @@ const toggleFavorite = () => {
         store.dispatch("favorites/addToFavorites", book.value);
     }
 };
+
 // Compute the price in the selected currency using the getter
 const convertedPrice = computed(() => {
     if (book.value && store.getters["books/getPriceInCurrency"]) {
