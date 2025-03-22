@@ -1,11 +1,11 @@
 const state = {
-    thema: "light",
+    theme: localStorage.getItem(theme) || "light",
     loading: false,
 };
 
 const mutations = {
     SET_THEME(state, theme) {
-        state.thema = theme;
+        state.theme = theme;
         localStorage.setItem("theme", theme);
     },
     SET_LOADING(state, loading) {
@@ -23,7 +23,7 @@ const actions = {
 };
 
 const getters = {
-    theme: (state) => state.thema,
+    theme: (state) => state.theme,
     loading: (state) => state.loading,
 };
 
