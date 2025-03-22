@@ -16,16 +16,42 @@ const mutations = {
 };
 
 const actions = {
-    addComment({ commit }, comment) {
+    addComment({ commit, rootState }, { bookId, text }) {
+        const userEmail = rootState.user.currentUser?.email;
+        if (!userEmail) return;
+
+        const comment = {
+            id: Date.now(),
+            bookId,
+            userEmail,
+            text,
+            timestamp: new Date().toISOString(),
+        };
+
         commit("ADD_COMMENT", comment);
     },
-    deleteComment({ commit }, commentId) {
-        commit("DELETE_COMMENT", commentId);
+    deleteComment({ commit, state, rootState }, commentId) {
+        const userEmail = rootState.user.currentUser?.email;
+        const comment = state.comments.find((c) => c.id === commentId);
+
+        if (comment && comment.userEmail === userEmail) {
+            commit("DELETE_COMMENT", commentId);
+        }
     },
 };
 
 const getters = {
     comments: (state) => state.comments,
+    getBookComments: (state) => (bookId) =>
+        state.comments.filter((comment) => comment.bookId == bookId),
+    getUserComments: (state, _, rootState) => {
+        const userEmail = rootState.user.currentUser?.email;
+        return userEmail
+            ? state.comments.filter(
+                  (comment) => comment.userEmail === userEmail
+              )
+            : [];
+    },
 };
 
 export default {

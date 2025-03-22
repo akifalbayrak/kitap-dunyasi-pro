@@ -1,21 +1,31 @@
 <template>
     <div class="comments-section">
         <h3>Yorumlar</h3>
-        <form @submit.prevent="handleSubmit">
+
+        <form v-if="currentUser" @submit.prevent="handleSubmit">
             <textarea
                 v-model="newComment"
                 placeholder="Yorumunuzu yazın..."
                 required></textarea>
             <button type="submit">Yorum Ekle</button>
         </form>
+
         <div v-if="bookComments.length">
             <div
                 v-for="comment in bookComments"
                 :key="comment.id"
                 class="comment">
                 <p>{{ comment.text }}</p>
-                <small>{{ formatDate(comment.timestamp) }}</small>
-                <button @click="deleteComment(comment.id)">Sil</button>
+                <small
+                    >{{ comment.userEmail }} -
+                    {{ formatDate(comment.timestamp) }}</small
+                >
+
+                <button
+                    v-if="comment.userEmail === currentUser?.email"
+                    @click="deleteComment(comment.id)">
+                    Sil
+                </button>
             </div>
         </div>
         <div v-else>
@@ -32,41 +42,24 @@ import { useRoute } from "vue-router";
 const store = useStore();
 const route = useRoute();
 
-// Yeni yorum için model
 const newComment = ref("");
-
-// Mevcut kitap id'sini alıyoruz (route parametresinden)
 const bookId = route.params.id;
-
-// Tüm yorumları store üzerinden alıyoruz
-const comments = computed(() => store.state.comments.comments);
-
-// Sadece ilgili kitabın yorumlarını filtreleyelim
+const currentUser = computed(() => store.state.user.currentUser);
 const bookComments = computed(() =>
-    comments.value.filter((comment) => comment.bookId == bookId)
+    store.getters["comments/getBookComments"](bookId)
 );
 
-// Yorum ekleme işlemi
 const handleSubmit = () => {
-    const comment = {
-        id: Date.now(),
-        bookId: bookId,
-        text: newComment.value,
-        timestamp: new Date().toISOString(),
-    };
-    store.dispatch("comments/addComment", comment);
+    store.dispatch("comments/addComment", { bookId, text: newComment.value });
     newComment.value = "";
 };
 
-// Yorum silme işlemi
 const deleteComment = (id) => {
     store.dispatch("comments/deleteComment", id);
 };
 
-// Basit bir tarih formatlama fonksiyonu
 const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
+    return new Date(dateString).toLocaleString();
 };
 </script>
 

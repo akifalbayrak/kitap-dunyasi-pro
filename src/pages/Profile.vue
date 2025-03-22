@@ -36,6 +36,12 @@
                     </li>
                 </ul>
             </div>
+            <div>
+                <p>Yorumlar</p>
+                <li v-for="comment in getUserComments()" :key="comment.id">
+                    {{ comment }}
+                </li>
+            </div>
         </div>
         <div v-else>
             <p>
@@ -79,5 +85,9 @@ function userFavorites() {
 
 function userBooks() {
     return store.getters["books/getUserBooks"](user.value?.email);
+}
+
+function getUserComments() {
+    return store.getters["comments/getUserComments"];
 }
 </script>
