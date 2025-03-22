@@ -51,9 +51,16 @@ const actions = {
     },
 };
 
+const getters = {
+    getUserBooks: (state) => (userEmail) => {
+        return state.books.filter((book) => book.email === userEmail);
+    },
+};
+
 export default {
     namespaced: true,
     state,
     mutations,
     actions,
+    getters,
 };

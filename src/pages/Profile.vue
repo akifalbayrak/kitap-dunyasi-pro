@@ -28,6 +28,14 @@
                     </li>
                 </ul>
             </div>
+            <div>
+                <p>Eklenen/Düzenlenen Kitaplar</p>
+                <ul>
+                    <li v-for="book in userBooks()" :key="book.id">
+                        {{ book.title }}
+                    </li>
+                </ul>
+            </div>
         </div>
         <div v-else>
             <p>
@@ -67,5 +75,9 @@ function update() {
 
 function userFavorites() {
     return store.getters["favorites/getUserFavorites"](user.value?.email);
+}
+
+function userBooks() {
+    return store.getters["books/getUserBooks"](user.value?.email);
 }
 </script>
