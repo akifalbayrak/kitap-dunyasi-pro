@@ -12,13 +12,22 @@
 </template>
 
 <script setup>
+import router from "@/router";
+import store from "@/store";
 import { ref } from "vue";
 
 const email = ref("");
 const message = ref("");
 
-const sendResetEmail = () => {
-    message.value =
-        "Eğer e-posta adresi sistemde varsa, şifre sıfırlama talimatları gönderildi.";
+const sendResetEmail = async () => {
+    const response = await store.dispatch("user/forgotPassword", email.value);
+    if (response === "success") {
+        message.value =
+            "Şifre sıfırlama talimatları e-posta adresinize gönderildi.";
+        router.push("/reset-password");
+        return;
+    } else {
+        message.value = "Bu e-posta adresiyle bir hesap bulunamadı.";
+    }
 };
 </script>

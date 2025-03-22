@@ -1,12 +1,17 @@
 export default {
     namespaced: true,
     state: {
-        user: JSON.parse(localStorage.getItem("user")) || null,
-        token: localStorage.getItem("token") || null, // JWT-like token
+        user: JSON.parse(localStorage.getItem("users")) || null,
+        currentUser: JSON.parse(localStorage.getItem("user")) || null,
+        token: localStorage.getItem("token") || null,
+        resetPasswordMail: null,
     },
     mutations: {
         SET_USER(state, user) {
             state.user = user;
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            users.push(user);
+            localStorage.setItem("users", JSON.stringify(users));
             localStorage.setItem("user", JSON.stringify(user));
         },
         SET_TOKEN(state, token) {
@@ -14,8 +19,21 @@ export default {
             localStorage.setItem("token", token);
         },
         LOGOUT(state) {
-            state.token = null; // Only remove token, not user data
+            state.token = null;
             localStorage.removeItem("token");
+        },
+        FORGOT_PASSWORD(state, email) {
+            state.resetPasswordMail = email;
+        },
+        RESET_PASSWORD(state, { newPassword }) {
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const userIndex = users.findIndex(
+                (user) => user.email === state.resetPasswordMail
+            );
+            if (userIndex !== -1) {
+                users[userIndex].password = newPassword;
+                localStorage.setItem("users", JSON.stringify(users));
+            }
         },
     },
     actions: {
@@ -44,6 +62,26 @@ export default {
         },
         logout({ commit }) {
             commit("LOGOUT");
+        },
+        forgotPassword({ commit }, email) {
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const user = users.find((user) => user.email === email);
+            if (user) {
+                commit("FORGOT_PASSWORD", email);
+                return "success";
+            }
+            return "error";
+        },
+        resetPassword({ commit, state }, { newPassword }) {
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const userIndex = users.findIndex(
+                (user) => user.email === state.resetPasswordMail
+            );
+            if (userIndex !== -1) {
+                commit("RESET_PASSWORD", { newPassword });
+                return "success";
+            }
+            return "error";
         },
     },
     getters: {

@@ -8,6 +8,7 @@ import ForgotPassword from "../pages/ForgotPassword.vue";
 import Profile from "../pages/Profile.vue";
 import AddBook from "../pages/AddBook.vue";
 import EditBook from "../pages/EditBook.vue";
+import ResetPassword from "@/pages/ResetPassword.vue";
 
 const routes = [
     { path: "/", component: Home },
@@ -15,6 +16,7 @@ const routes = [
     { path: "/login", component: Login },
     { path: "/register", component: Register },
     { path: "/forgot-password", component: ForgotPassword },
+    { path: "/reset-password", component: ResetPassword },
     {
         path: "/profile",
         component: Profile,
