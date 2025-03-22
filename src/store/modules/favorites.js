@@ -48,6 +48,9 @@ const getters = {
               )
             : false;
     },
+    getUserFavorites: (state) => (userEmail) => {
+        return state.favorites[userEmail] || [];
+    },
 };
 
 export default {

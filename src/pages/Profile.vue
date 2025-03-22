@@ -20,6 +20,14 @@
                 <button @click="update">Kaydet</button>
                 <button @click="isEditing = false">İptal</button>
             </div>
+            <div>
+                <p>Favoriler</p>
+                <ul>
+                    <li v-for="favorite in userFavorites()" :key="favorite.id">
+                        {{ favorite.title }}
+                    </li>
+                </ul>
+            </div>
         </div>
         <div v-else>
             <p>
@@ -55,5 +63,9 @@ function logout() {
 function update() {
     store.dispatch("user/editUser", editedUser.value);
     isEditing.value = false;
+}
+
+function userFavorites() {
+    return store.getters["favorites/getUserFavorites"](user.value?.email);
 }
 </script>
