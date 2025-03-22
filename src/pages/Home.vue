@@ -2,14 +2,18 @@
     <div class="book-list">
         <h2 class="title">Kitap Listesi</h2>
         <div v-if="books.length" class="books-container">
-            <div v-for="book in books" :key="book.id" class="book-card">
+            <router-link
+                :to="'/book/' + book.id"
+                v-for="book in books"
+                :key="book.id"
+                class="book-card">
                 <img :src="book.image" :alt="book.title" class="book-image" />
-                <router-link :to="'/book/' + book.id" class="book-title">
+                <p :to="'/book/' + book.id" class="book-title">
                     {{ book.title }}
-                </router-link>
+                </p>
                 <p class="book-author">{{ book.author }}</p>
                 <p class="book-price">{{ book.price }} {{ book.currency }}</p>
-            </div>
+            </router-link>
         </div>
         <p v-else class="empty-message">Henüz kitap eklenmedi.</p>
     </div>
@@ -51,6 +55,7 @@ const books = computed(() => store.state.books.books);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     text-align: center;
+    text-decoration: none;
 }
 
 .book-card:hover {
