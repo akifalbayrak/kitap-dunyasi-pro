@@ -55,6 +55,9 @@ const getters = {
     getUserBooks: (state) => (userEmail) => {
         return state.books.filter((book) => book.email === userEmail);
     },
+    getBookById: (state) => (bookId) => {
+        return state.books.find((book) => book.id == bookId);
+    },
 };
 
 export default {
