@@ -3,6 +3,11 @@
         <h2>Kitap Listesi</h2>
         <div v-if="books.length">
             <div v-for="book in books" :key="book.id">
+                <img
+                    :src="book.image"
+                    :alt="book.title"
+                    width="100"
+                    height="100" />
                 <router-link :to="'/book/' + book.id">
                     <h3>{{ book.title }}</h3>
                 </router-link>
