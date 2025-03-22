@@ -17,11 +17,10 @@ const mutations = {
     },
     UPDATE_BOOK(state, updatedBook) {
         const index = state.books.findIndex(
-            (book) =>
-                book.id === updatedBook.id && book.email === updatedBook.email
+            (book) => book.id === updatedBook.id
         );
         if (index !== -1) {
-            state.books.splice(index, 1, updatedBook);
+            state.books[index] = updatedBook;
             localStorage.setItem("books", JSON.stringify(state.books));
         }
     },
