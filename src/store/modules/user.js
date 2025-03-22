@@ -19,6 +19,10 @@ export default {
         },
         EDIT_USER(state, user) {
             state.currentUser = user;
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const userIndex = users.findIndex((u) => u.email === user.email);
+            users[userIndex] = user;
+            localStorage.setItem("users", JSON.stringify(users));
             localStorage.setItem("user", JSON.stringify(user));
         },
         SET_TOKEN(state, token) {
@@ -68,6 +72,10 @@ export default {
             } else {
                 return "error";
             }
+        },
+        editUser({ commit }, userData) {
+            commit("EDIT_USER", userData);
+            return "success";
         },
         logout({ commit }) {
             commit("LOGOUT");

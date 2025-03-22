@@ -5,6 +5,21 @@
             <p>İsim: {{ user.name }}</p>
             <p>E-posta: {{ user.email }}</p>
             <button @click="logout">Çıkış Yap</button>
+            <button @click="isEditing = !isEditing">Bilgileri Güncelle</button>
+            <div v-if="isEditing">
+                <h3>Bilgileri Güncelle</h3>
+                <input v-model="editedUser.name" placeholder="Yeni isim" />
+                <input
+                    v-model="editedUser.email"
+                    placeholder="Yeni e-posta"
+                    disabled />
+                <input
+                    v-model="editedUser.password"
+                    type="password"
+                    placeholder="Yeni şifre" />
+                <button @click="update">Kaydet</button>
+                <button @click="isEditing = false">İptal</button>
+            </div>
         </div>
         <div v-else>
             <p>
@@ -16,17 +31,29 @@
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { computed } from "vue";
 
 const store = useStore();
 const router = useRouter();
 
 const user = computed(() => store.getters["user/getUser"]);
+const isEditing = ref(false);
+
+const editedUser = ref({
+    name: user.value?.name || "",
+    email: user.value?.email || "",
+    password: user.value?.password || "",
+});
 
 function logout() {
     store.dispatch("user/logout");
     router.push("/login");
+}
+
+function update() {
+    store.dispatch("user/editUser", editedUser.value);
+    isEditing.value = false;
 }
 </script>
