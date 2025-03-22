@@ -2,20 +2,19 @@
     <header class="header">
         <div class="container">
             <router-link to="/" class="logo">Kitap Dünyası</router-link>
-            <nav class="nav-links">
+
+            <!-- Hamburger Menu Button -->
+            <button class="menu-toggle" @click="toggleMenu">&#9776;</button>
+
+            <nav :class="['nav-links', { active: isMenuOpen }]">
                 <router-link to="/" class="nav-link">Ana Sayfa</router-link>
                 <router-link to="/add-book" class="nav-link"
                     >Kitap Ekle</router-link
                 >
-
-                <!-- Display user email if logged in -->
                 <span v-if="user" class="user-email">{{ user.email }}</span>
-
                 <router-link v-if="user" to="/profile" class="nav-link"
                     >Profil</router-link
                 >
-
-                <!-- Check if user is logged in or not -->
                 <router-link v-if="!user" to="/login" class="nav-link login"
                     >Giriş Yap</router-link
                 >
@@ -29,13 +28,16 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const store = useStore();
-
-// Get user data from the Vuex store
 const user = computed(() => store.getters["user/getUser"]);
 const logout = () => store.dispatch("user/logout");
+
+const isMenuOpen = ref(false);
+const toggleMenu = () => {
+    isMenuOpen.value = !isMenuOpen.value;
+};
 </script>
 
 <style scoped>
@@ -108,5 +110,37 @@ const logout = () => store.dispatch("user/logout");
 
 .logout:hover {
     background-color: #c0392b;
+}
+
+/* Responsive Design */
+.menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #2c3e50;
+        padding: 1rem 0;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
 }
 </style>
