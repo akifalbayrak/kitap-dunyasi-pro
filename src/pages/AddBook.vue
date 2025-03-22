@@ -40,6 +40,37 @@
                 </select>
             </div>
 
+            <!-- Image Upload -->
+            <div>
+                <label for="image">Resim</label>
+                <input
+                    type="file"
+                    id="image"
+                    @change="handleImageUpload"
+                    accept="image/*"
+                    required />
+            </div>
+
+            <!-- Category -->
+            <div>
+                <label for="category">Kategori</label>
+                <input
+                    v-model="category"
+                    id="category"
+                    placeholder="Kategori"
+                    required />
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label for="description">Açıklama</label>
+                <textarea
+                    v-model="description"
+                    id="description"
+                    placeholder="Açıklama"
+                    required></textarea>
+            </div>
+
             <div>
                 <button type="submit">Ekle</button>
             </div>
@@ -56,23 +87,48 @@ const title = ref("");
 const author = ref("");
 const price = ref(0);
 const currency = ref("USD"); // Default currency is USD
+const image = ref("");
+const category = ref("");
+const description = ref("");
 const store = useStore();
 const router = useRouter();
 
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        image.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
 const addBook = () => {
-    if (title.value && author.value && price.value >= 0) {
+    if (
+        title.value &&
+        author.value &&
+        price.value >= 0 &&
+        image.value &&
+        category.value &&
+        description.value
+    ) {
         const newBook = {
             id: Date.now(),
             title: title.value,
             author: author.value,
             price: price.value,
             currency: currency.value, // Store the selected currency
+            image: image.value, // Store the base64 image
+            category: category.value,
+            description: description.value,
         };
         store.dispatch("books/addBook", newBook);
         title.value = "";
         author.value = "";
         price.value = 0;
         currency.value = "USD"; // Reset to default currency
+        image.value = "";
+        category.value = "";
+        description.value = "";
         router.push("/");
     }
 };
