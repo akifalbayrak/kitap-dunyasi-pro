@@ -1,5 +1,5 @@
 const state = {
-    theme: localStorage.getItem(theme) || "light",
+    theme: localStorage.getItem("theme") || "light",
     loading: false,
 };
 
