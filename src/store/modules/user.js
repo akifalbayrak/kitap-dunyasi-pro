@@ -1,17 +1,24 @@
 export default {
     namespaced: true,
     state: {
-        user: JSON.parse(localStorage.getItem("users")) || null,
+        users: JSON.parse(localStorage.getItem("users")) || null,
         currentUser: JSON.parse(localStorage.getItem("user")) || null,
         token: localStorage.getItem("token") || null,
         resetPasswordMail: null,
     },
     mutations: {
-        SET_USER(state, user) {
-            state.user = user;
+        REGISTER_USER(state, user) {
+            state.currentUser = user;
             const users = JSON.parse(localStorage.getItem("users")) || [];
             users.push(user);
             localStorage.setItem("users", JSON.stringify(users));
+        },
+        LOGIN_USER(state, user) {
+            state.currentUser = user;
+            localStorage.setItem("user", JSON.stringify(user));
+        },
+        EDIT_USER(state, user) {
+            state.currentUser = user;
             localStorage.setItem("user", JSON.stringify(user));
         },
         SET_TOKEN(state, token) {
@@ -38,27 +45,29 @@ export default {
     },
     actions: {
         register({ commit }, userData) {
-            const existingUser = JSON.parse(localStorage.getItem("user"));
-            if (existingUser && existingUser.email === userData.email) {
-                return "Bu e-posta zaten kayıtlı.";
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const user = users.find((user) => user.email === userData.email);
+            if (user) {
+                return "error";
+            } else {
+                commit("REGISTER_USER", userData);
+                return "success";
             }
-            const fakeToken = "123456789abcdef";
-            commit("SET_USER", userData);
-            commit("SET_TOKEN", fakeToken);
-            return "Kayıt başarılı!";
         },
         login({ commit }, credentials) {
-            const storedUser = JSON.parse(localStorage.getItem("user"));
-            if (storedUser && storedUser.email === credentials.email) {
-                if (storedUser.password === credentials.password) {
-                    const fakeToken = "123456789abcdef";
-                    commit("SET_TOKEN", fakeToken);
-                    return "success";
-                } else {
-                    return "Hatalı şifre!";
-                }
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const user = users.find(
+                (user) =>
+                    user.email === credentials.email &&
+                    user.password === credentials.password
+            );
+            if (user) {
+                commit("LOGIN_USER", user);
+                commit("SET_TOKEN", "token");
+                return "success";
+            } else {
+                return "error";
             }
-            return "Kullanıcı bulunamadı!";
         },
         logout({ commit }) {
             commit("LOGOUT");
@@ -86,6 +95,6 @@ export default {
     },
     getters: {
         isAuthenticated: (state) => !!state.token,
-        getUser: (state) => state.user,
+        getUser: (state) => state.currentUser,
     },
 };

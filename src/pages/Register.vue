@@ -40,7 +40,7 @@ const successMessage = ref("");
 
 const register = async () => {
     const response = await store.dispatch("user/register", user.value);
-    if (response === "Bu e-posta zaten kayıtlı.") {
+    if (response === "error") {
         errorMessage.value = response;
     } else {
         successMessage.value = response;
