@@ -1,13 +1,17 @@
 <template>
     <div class="comments-section">
-        <h3>Yorumlar</h3>
+        <h3 class="section-title">Yorumlar</h3>
 
-        <form v-if="currentUser" @submit.prevent="handleSubmit">
+        <form
+            v-if="currentUser"
+            @submit.prevent="handleSubmit"
+            class="comment-form">
             <textarea
                 v-model="newComment"
                 placeholder="Yorumunuzu yazın..."
-                required></textarea>
-            <button type="submit">Yorum Ekle</button>
+                required
+                class="comment-input"></textarea>
+            <button type="submit" class="submit-button">Yorum Ekle</button>
         </form>
 
         <div v-if="bookComments.length">
@@ -15,21 +19,22 @@
                 v-for="comment in bookComments"
                 :key="comment.id"
                 class="comment">
-                <p>{{ comment.text }}</p>
-                <small
-                    >{{ comment.userEmail }} -
-                    {{ formatDate(comment.timestamp) }}</small
-                >
+                <p class="comment-text">{{ comment.text }}</p>
+                <small class="comment-meta">
+                    {{ comment.userEmail }} -
+                    {{ formatDate(comment.timestamp) }}
+                </small>
 
                 <button
                     v-if="comment.userEmail === currentUser?.email"
-                    @click="deleteComment(comment.id)">
+                    @click="deleteComment(comment.id)"
+                    class="delete-button">
                     Sil
                 </button>
             </div>
         </div>
         <div v-else>
-            <p>Henüz yorum eklenmemiş.</p>
+            <p class="no-comments">Henüz yorum eklenmemiş.</p>
         </div>
     </div>
 </template>
@@ -65,32 +70,90 @@ const formatDate = (dateString) => {
 
 <style scoped>
 .comments-section {
-    margin-top: 20px;
-    padding: 10px;
-    border-top: 1px solid #ccc;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
 }
-.comments-section textarea {
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.comment-input {
     width: 100%;
-    height: 80px;
-    margin-bottom: 10px;
-    padding: 8px;
+    min-height: 80px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
     resize: vertical;
 }
+
+.submit-button {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-button:hover {
+    background: #0056b3;
+}
+
 .comment {
-    border-bottom: 1px solid #eee;
-    padding: 8px 0;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border-left: 4px solid #007bff;
 }
-.comment p {
-    margin: 0;
+
+.comment-text {
+    font-size: 1rem;
+    margin-bottom: 5px;
 }
-.comment small {
+
+.comment-meta {
+    font-size: 0.875rem;
     color: #666;
 }
-.comment button {
-    background: none;
+
+.delete-button {
+    background: #dc3545;
+    color: white;
+    padding: 5px 10px;
     border: none;
-    color: red;
+    border-radius: 5px;
     cursor: pointer;
-    margin-top: 5px;
+    font-size: 0.875rem;
+    transition: 0.3s;
+    margin: 12px;
+}
+
+.delete-button:hover {
+    background: #a71d2a;
+}
+
+.no-comments {
+    text-align: center;
+    font-size: 1rem;
+    color: #777;
+    margin-top: 10px;
 }
 </style>
