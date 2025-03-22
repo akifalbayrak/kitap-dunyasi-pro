@@ -13,6 +13,7 @@
 
         <div class="button-group">
             <button
+                v-if="currentUser"
                 @click="toggleFavorite"
                 :class="{ 'favorite-button': isFavorite }">
                 {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
