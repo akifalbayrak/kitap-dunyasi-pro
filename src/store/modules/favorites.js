@@ -1,31 +1,52 @@
 const state = {
-    favorites: JSON.parse(localStorage.getItem("favorites")) || [],
+    favorites: JSON.parse(localStorage.getItem("favorites")) || {},
 };
 
 const mutations = {
-    ADD_TO_FAVORITES(state, book) {
-        state.favorites.push(book);
+    ADD_TO_FAVORITES(state, { userEmail, book }) {
+        if (!state.favorites[userEmail]) {
+            state.favorites[userEmail] = [];
+        }
+        state.favorites[userEmail].push(book);
         localStorage.setItem("favorites", JSON.stringify(state.favorites));
     },
-    REMOVE_FROM_FAVORITES(state, bookId) {
-        state.favorites = state.favorites.filter((book) => book.id !== bookId);
-        localStorage.setItem("favorites", JSON.stringify(state.favorites));
+    REMOVE_FROM_FAVORITES(state, { userEmail, bookId }) {
+        if (state.favorites[userEmail]) {
+            state.favorites[userEmail] = state.favorites[userEmail].filter(
+                (book) => book.id !== bookId
+            );
+            localStorage.setItem("favorites", JSON.stringify(state.favorites));
+        }
     },
 };
 
 const actions = {
-    addToFavorites({ commit }, book) {
-        commit("ADD_TO_FAVORITES", book);
+    addToFavorites({ commit, rootState }, book) {
+        const userEmail = rootState.user.currentUser?.email;
+        if (userEmail) {
+            commit("ADD_TO_FAVORITES", { userEmail, book });
+        }
     },
-    removeFromFavorites({ commit }, bookId) {
-        commit("REMOVE_FROM_FAVORITES", bookId);
+    removeFromFavorites({ commit, rootState }, bookId) {
+        const userEmail = rootState.user.currentUser?.email;
+        if (userEmail) {
+            commit("REMOVE_FROM_FAVORITES", { userEmail, bookId });
+        }
     },
 };
 
 const getters = {
-    favorites: (state) => state.favorites,
-    isFavorite: (state) => (bookId) => {
-        return state.favorites.some((book) => book.id === bookId);
+    favorites: (state, _, rootState) => {
+        const userEmail = rootState.user.currentUser?.email;
+        return userEmail ? state.favorites[userEmail] || [] : [];
+    },
+    isFavorite: (state, _, rootState) => (bookId) => {
+        const userEmail = rootState.user.currentUser?.email;
+        return userEmail
+            ? (state.favorites[userEmail] || []).some(
+                  (book) => book.id === bookId
+              )
+            : false;
     },
 };
 
