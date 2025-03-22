@@ -20,7 +20,7 @@
                 <button @click="update">Kaydet</button>
                 <button @click="isEditing = false">İptal</button>
             </div>
-            <div>
+            <div v-if="userFavorites().length">
                 <p>Favoriler</p>
                 <ul>
                     <li v-for="favorite in userFavorites()" :key="favorite.id">
@@ -28,7 +28,7 @@
                     </li>
                 </ul>
             </div>
-            <div>
+            <div v-if="userBooks().length">
                 <p>Eklenen/Düzenlenen Kitaplar</p>
                 <ul>
                     <li v-for="book in userBooks()" :key="book.id">
@@ -36,7 +36,7 @@
                     </li>
                 </ul>
             </div>
-            <div>
+            <div v-if="getUserComments().length">
                 <p>Yorumlar</p>
                 <li v-for="comment in getUserComments()" :key="comment.id">
                     {{ comment }}
