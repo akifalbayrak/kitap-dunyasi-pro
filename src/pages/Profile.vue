@@ -132,6 +132,7 @@ function getBookById(id) {
 }
 </script>
 <style scoped>
+/* General Styles */
 .profile-container {
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -167,7 +168,7 @@ function getBookById(id) {
 .buttons {
     display: flex;
     gap: 10px;
-    margin-top: 15px;
+    margin: 15px;
 }
 
 .logout-btn,
@@ -334,5 +335,148 @@ function getBookById(id) {
     font-size: 1rem;
     color: #444;
     line-height: 1.5;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 15px;
+    }
+
+    .profile-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .profile-details {
+        padding: 15px;
+    }
+
+    .profile-info {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logout-btn,
+    .edit-btn,
+    .save-btn,
+    .cancel-btn {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px;
+    }
+
+    .input-field {
+        font-size: 0.9rem;
+    }
+
+    .edit-section {
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    .favorites-section,
+    .books-section,
+    .comments-section {
+        padding: 12px;
+    }
+
+    .comment-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+    }
+
+    .book-image {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .book-info {
+        width: 100%;
+    }
+
+    .book-title {
+        font-size: 1rem;
+    }
+
+    .book-author {
+        font-size: 0.9rem;
+    }
+
+    .comment-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 10px;
+    }
+
+    .profile-title {
+        font-size: 1.3rem;
+    }
+
+    .profile-info {
+        font-size: 0.9rem;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .input-field {
+        font-size: 0.85rem;
+    }
+
+    .edit-section {
+        padding: 10px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .favorites-section,
+    .books-section,
+    .comments-section {
+        padding: 10px;
+    }
+
+    .comment-item {
+        padding: 10px;
+        flex-direction: column;
+    }
+
+    .book-image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .book-info {
+        width: 100%;
+    }
+
+    .book-title {
+        font-size: 1rem;
+    }
+
+    .book-author {
+        font-size: 0.9rem;
+    }
+
+    .comment-text {
+        font-size: 0.9rem;
+    }
 }
 </style>
