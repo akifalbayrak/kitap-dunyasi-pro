@@ -8,9 +8,11 @@
             {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
         </button>
 
-        <button @click="deleteBook" class="text-red-500">Kitabı Sil</button>
+        <button v-if="isOwner" @click="deleteBook" class="text-red-500">
+            Kitabı Sil
+        </button>
 
-        <router-link :to="'/edit-book/' + book.id">
+        <router-link v-if="isOwner" :to="'/edit-book/' + book.id">
             <button>Düzenle</button>
         </router-link>
 
@@ -36,6 +38,9 @@ const book = computed(() =>
     books.value.find((book) => book.id == route.params.id)
 );
 
+const currentUser = computed(() => store.state.user.currentUser);
+const isOwner = computed(() => book.value?.email === currentUser.value?.email);
+
 const isFavorite = computed(() =>
     store.getters["favorites/isFavorite"](book.value?.id)
 );
@@ -48,7 +53,6 @@ const toggleFavorite = () => {
     }
 };
 
-// Compute the price in the selected currency using the getter
 const convertedPrice = computed(() => {
     if (book.value && store.getters["books/getPriceInCurrency"]) {
         return store.getters["books/getPriceInCurrency"](book.value.price);
@@ -59,7 +63,7 @@ const convertedPrice = computed(() => {
 const deleteBook = () => {
     if (confirm("Kitabı silmek istediğinizden emin misiniz?")) {
         store.dispatch("books/deleteBook", book.value.id);
-        router.push("/"); // Redirect to the homepage after deletion
+        router.push("/");
     }
 };
 </script>

@@ -9,54 +9,46 @@ const mutations = {
         state.books.push(book);
         localStorage.setItem("books", JSON.stringify(state.books));
     },
-    DELETE_BOOK(state, bookId) {
-        state.books = state.books.filter((book) => book.id !== bookId);
+    DELETE_BOOK(state, { bookId, email }) {
+        state.books = state.books.filter(
+            (book) => book.id !== bookId && book.email === email
+        );
         localStorage.setItem("books", JSON.stringify(state.books));
     },
     UPDATE_BOOK(state, updatedBook) {
         const index = state.books.findIndex(
-            (book) => book.id === updatedBook.id
+            (book) =>
+                book.id === updatedBook.id && book.email === updatedBook.email
         );
         if (index !== -1) {
             state.books.splice(index, 1, updatedBook);
             localStorage.setItem("books", JSON.stringify(state.books));
         }
     },
-    SET_RATES(state, rates) {
-        state.rates = rates;
-    },
-    SET_BASE_CURRENCY(state, currency) {
-        state.baseCurrency = currency;
-    },
 };
 
 const actions = {
-    addBook({ commit }, book) {
-        commit("ADD_BOOK", { ...book, id: Date.now() });
-    },
-    deleteBook({ commit }, bookId) {
-        commit("DELETE_BOOK", bookId);
-    },
-    updateBook({ commit }, updatedBook) {
-        commit("UPDATE_BOOK", updatedBook);
-    },
-    setRates({ commit }, rates) {
-        commit("SET_RATES", rates);
-    },
-    setBaseCurrency({ commit }, currency) {
-        commit("SET_BASE_CURRENCY", currency);
-    },
-};
-
-const getters = {
-    books: (state) => state.books,
-    getPriceInCurrency: (state) => (bookPrice) => {
-        // Convert the price to the selected currency
-        const rate = state.rates[state.baseCurrency];
-        if (rate) {
-            return (bookPrice * rate).toFixed(2);
+    addBook({ commit, rootState }, book) {
+        const currentUser = rootState.user.currentUser;
+        if (currentUser) {
+            commit("ADD_BOOK", {
+                ...book,
+                id: Date.now(),
+                email: currentUser.email,
+            });
         }
-        return bookPrice;
+    },
+    deleteBook({ commit, rootState }, bookId) {
+        const currentUser = rootState.user.currentUser;
+        if (currentUser) {
+            commit("DELETE_BOOK", { bookId, email: currentUser.email });
+        }
+    },
+    updateBook({ commit, rootState }, updatedBook) {
+        const currentUser = rootState.user.currentUser;
+        if (currentUser) {
+            commit("UPDATE_BOOK", { ...updatedBook, email: currentUser.email });
+        }
     },
 };
 
@@ -65,5 +57,4 @@ export default {
     state,
     mutations,
     actions,
-    getters,
 };
