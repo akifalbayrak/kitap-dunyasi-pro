@@ -2,6 +2,7 @@
     <div>
         <h2>Profilim</h2>
         <div v-if="user">
+            <p>İsim: {{ user.name }}</p>
             <p>E-posta: {{ user.email }}</p>
             <button @click="logout">Çıkış Yap</button>
         </div>
@@ -22,7 +23,7 @@ import { computed } from "vue";
 const store = useStore();
 const router = useRouter();
 
-const user = computed(() => store.state.user.user);
+const user = computed(() => store.getters["user/getUser"]);
 
 function logout() {
     store.dispatch("user/logout");

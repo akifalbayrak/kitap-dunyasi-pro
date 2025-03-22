@@ -3,40 +3,39 @@
         <h2>Giriş Yap</h2>
         <form @submit.prevent="login">
             <input
-                v-model="email"
+                v-model="credentials.email"
                 type="email"
                 placeholder="E-posta"
                 required />
             <input
-                v-model="password"
+                v-model="credentials.password"
                 type="password"
                 placeholder="Şifre"
                 required />
             <button type="submit">Giriş Yap</button>
         </form>
-        <p>
-            Hesabınız yok mu?
-            <router-link to="/register">Kayıt Olun</router-link>
-        </p>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <router-link to="/forgot-password">Şifremi Unuttum</router-link>
+        <router-link to="/register">Hesabınız yok mu? Kayıt olun.</router-link>
     </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
-const email = ref("");
-const password = ref("");
-const router = useRouter();
 const store = useStore();
+const router = useRouter();
+const credentials = ref({ email: "", password: "" });
+const errorMessage = ref("");
 
-const login = () => {
-    const user = {
-        email: email.value,
-        password: password.value,
-    };
-    store.dispatch("user/login", user);
-    router.push("/");
+const login = async () => {
+    const response = await store.dispatch("user/login", credentials.value);
+    if (response === "success") {
+        router.push("/profile");
+    } else {
+        errorMessage.value = response;
+    }
 };
 </script>
