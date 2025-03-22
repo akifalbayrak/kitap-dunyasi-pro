@@ -31,7 +31,9 @@ export default {
         },
         LOGOUT(state) {
             state.token = null;
+            state.currentUser = null;
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
         },
         FORGOT_PASSWORD(state, email) {
             state.resetPasswordMail = email;
