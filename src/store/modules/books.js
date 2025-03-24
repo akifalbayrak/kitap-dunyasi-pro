@@ -1,7 +1,5 @@
 const state = {
     books: JSON.parse(localStorage.getItem("books")) || [],
-    rates: {},
-    baseCurrency: "USD",
 };
 
 const mutations = {
@@ -23,6 +21,24 @@ const mutations = {
             state.books[index] = updatedBook;
             localStorage.setItem("books", JSON.stringify(state.books));
         }
+    },
+    UPDATE_BOOKS_CURRENCY(state) {
+        const baseCurrency = localStorage
+            .getItem("baseCurrency")
+            .replace(/"/g, "");
+        const rates = JSON.parse(localStorage.getItem("currencyRates"));
+        state.books = state.books.map((book) => {
+            const newPrice = (
+                (book.price * rates[baseCurrency]) /
+                rates[book.currency]
+            ).toFixed(2);
+            return {
+                ...book,
+                currency: baseCurrency,
+                price: newPrice,
+            };
+        });
+        localStorage.setItem("books", JSON.stringify(state.books));
     },
 };
 
@@ -48,6 +64,9 @@ const actions = {
         if (currentUser) {
             commit("UPDATE_BOOK", { ...updatedBook, email: currentUser.email });
         }
+    },
+    updateBooksCurrency({ commit }) {
+        commit("UPDATE_BOOKS_CURRENCY");
     },
 };
 

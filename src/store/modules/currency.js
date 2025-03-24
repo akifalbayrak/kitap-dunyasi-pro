@@ -6,7 +6,7 @@ const CACHE_DURATION = 30 * 60 * 1000; // 30 dakika
 
 const state = {
     rates: JSON.parse(localStorage.getItem(CACHE_KEY)) || {},
-    baseCurrency: "TRY",
+    baseCurrency: JSON.parse(localStorage.getItem("baseCurrency")) || "TRY",
     listCurrency: [
         "AUD",
         "BGN",
@@ -51,6 +51,7 @@ const mutations = {
         localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
     },
     SET_BASE_CURRENCY(state, currency) {
+        localStorage.setItem("baseCurrency", JSON.stringify(currency));
         state.baseCurrency = currency;
     },
 };

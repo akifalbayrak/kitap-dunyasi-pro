@@ -49,6 +49,7 @@ const currencyOptions = computed(() => store.getters["currency/listCurrency"]);
 
 const changeCurrency = (e) => {
     store.dispatch("currency/changeBaseCurrency", e.target.value);
+    store.dispatch("books/updateBooksCurrency");
 };
 
 const isMenuOpen = ref(false);

@@ -106,6 +106,7 @@ const editedBook = ref({
     image: book.value?.image || "",
     category: book.value?.category || "",
     description: book.value?.description || "",
+    currency: book.value?.currency || currency.value,
 });
 
 const currentUser = computed(() => store.state.user.currentUser);

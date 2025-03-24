@@ -125,6 +125,7 @@ const addBook = () => {
             image: image.value,
             category: category.value,
             description: description.value,
+            currency: currency.value,
         };
         store.dispatch("books/addBook", newBook);
         title.value = "";
