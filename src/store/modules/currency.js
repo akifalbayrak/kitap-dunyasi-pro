@@ -6,7 +6,42 @@ const CACHE_DURATION = 30 * 60 * 1000; // 30 dakika
 
 const state = {
     rates: JSON.parse(localStorage.getItem(CACHE_KEY)) || {},
-    baseCurrency: "USD", // Default currency is USD
+    baseCurrency: "TRY",
+    listCurrency: [
+        "AUD",
+        "BGN",
+        "BRL",
+        "CAD",
+        "CHF",
+        "CNY",
+        "CZK",
+        "DKK",
+        "EUR",
+        "GBP",
+        "HKD",
+        "HRK",
+        "HUF",
+        "IDR",
+        "ILS",
+        "INR",
+        "ISK",
+        "JPY",
+        "KRW",
+        "MXN",
+        "MYR",
+        "NOK",
+        "NZD",
+        "PHP",
+        "PLN",
+        "RON",
+        "RUB",
+        "SEK",
+        "SGD",
+        "THB",
+        "TRY",
+        "USD",
+        "ZAR",
+    ],
 };
 
 const mutations = {
@@ -29,7 +64,7 @@ const actions = {
             return;
         }
         try {
-            const response = await api.get(state.baseCurrency);
+            const response = await api.get();
             commit("SET_RATES", { rates: response.data.data, timestamp: now });
         } catch (error) {
             console.error("Döviz kurları yüklenemedi:", error);
@@ -44,6 +79,7 @@ const actions = {
 const getters = {
     rates: (state) => state.rates,
     baseCurrency: (state) => state.baseCurrency,
+    listCurrency: (state) => state.listCurrency,
 };
 
 export default {

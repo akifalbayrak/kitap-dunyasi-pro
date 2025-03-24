@@ -21,6 +21,17 @@
                 <button v-if="user" @click="logout" class="nav-link logout">
                     Çıkış Yap
                 </button>
+                <select
+                    v-model="currency"
+                    @change="changeCurrency"
+                    class="nav-link">
+                    <option
+                        v-for="option in currencyOptions"
+                        :key="option"
+                        :value="option">
+                        {{ option }}
+                    </option>
+                </select>
             </nav>
         </div>
     </header>
@@ -33,6 +44,12 @@ import { computed, ref } from "vue";
 const store = useStore();
 const user = computed(() => store.getters["user/getUser"]);
 const logout = () => store.dispatch("user/logout");
+const currency = computed(() => store.getters["currency/baseCurrency"]);
+const currencyOptions = computed(() => store.getters["currency/listCurrency"]);
+
+const changeCurrency = (e) => {
+    store.dispatch("currency/changeBaseCurrency", e.target.value);
+};
 
 const isMenuOpen = ref(false);
 const toggleMenu = () => {
