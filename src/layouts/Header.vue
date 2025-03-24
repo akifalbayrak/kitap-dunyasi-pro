@@ -21,6 +21,17 @@
                 <button v-if="user" @click="logout" class="nav-link logout">
                     Çıkış Yap
                 </button>
+                <select
+                    v-model="currency"
+                    @change="changeCurrency"
+                    class="custom-select">
+                    <option
+                        v-for="option in currencyOptions"
+                        :key="option"
+                        :value="option">
+                        {{ option }}
+                    </option>
+                </select>
             </nav>
         </div>
     </header>
@@ -33,6 +44,13 @@ import { computed, ref } from "vue";
 const store = useStore();
 const user = computed(() => store.getters["user/getUser"]);
 const logout = () => store.dispatch("user/logout");
+const currency = computed(() => store.getters["currency/baseCurrency"]);
+const currencyOptions = computed(() => store.getters["currency/listCurrency"]);
+
+const changeCurrency = (e) => {
+    store.dispatch("currency/changeBaseCurrency", e.target.value);
+    store.dispatch("books/updateBooksCurrency");
+};
 
 const isMenuOpen = ref(false);
 const toggleMenu = () => {
@@ -120,6 +138,45 @@ const toggleMenu = () => {
     border: none;
     color: white;
     cursor: pointer;
+}
+
+.custom-select {
+    appearance: none;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    font-size: 1rem;
+    padding: 10px 15px;
+    border: 2px solid #16a085;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100px;
+}
+
+/* Add a dropdown icon */
+.custom-select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+/* Hover and Focus Effects */
+.custom-select:hover {
+    border-color: #1abc9c;
+}
+
+.custom-select:focus {
+    border-color: #f39c12;
+    box-shadow: 0 0 5px rgba(243, 156, 18, 0.7);
+}
+
+/* Styling for options */
+.custom-select option {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px;
 }
 
 @media (max-width: 768px) {

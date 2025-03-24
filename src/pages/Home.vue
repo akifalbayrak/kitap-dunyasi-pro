@@ -5,14 +5,14 @@
             <router-link
                 :to="'/book/' + book.id"
                 v-for="book in books"
-                :key="book.id"
+                :key="book.id.toString()"
                 class="book-card">
                 <img :src="book.image" :alt="book.title" class="book-image" />
                 <p :to="'/book/' + book.id" class="book-title">
                     {{ book.title }}
                 </p>
                 <p class="book-author">{{ book.author }}</p>
-                <p class="book-price">{{ book.price }} {{ book.currency }}</p>
+                <p class="book-price">{{ book.price }} {{ currency }}</p>
             </router-link>
         </div>
         <p v-else class="empty-message">Henüz kitap eklenmedi.</p>
@@ -25,6 +25,7 @@ import { computed } from "vue";
 
 const store = useStore();
 const books = computed(() => store.state.books.books);
+const currency = computed(() => store.getters["currency/baseCurrency"]);
 </script>
 
 <style scoped>
