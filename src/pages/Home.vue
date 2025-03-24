@@ -12,7 +12,7 @@
                     {{ book.title }}
                 </p>
                 <p class="book-author">{{ book.author }}</p>
-                <p class="book-price">{{ book.price }} {{ book.currency }}</p>
+                <p class="book-price">{{ book.price }} {{ currency }}</p>
             </router-link>
         </div>
         <p v-else class="empty-message">Henüz kitap eklenmedi.</p>
@@ -25,6 +25,7 @@ import { computed } from "vue";
 
 const store = useStore();
 const books = computed(() => store.state.books.books);
+const currency = computed(() => store.getters["currency/baseCurrency"]);
 </script>
 
 <style scoped>

@@ -19,24 +19,13 @@
                     required />
             </div>
             <div class="form-group">
-                <label for="price">Fiyat</label>
+                <label for="price">Fiyat ({{ currency }})</label>
                 <input
                     v-model.number="price"
                     id="price"
                     placeholder="Kitap Fiyatı"
                     type="number"
                     required />
-            </div>
-
-            <!-- Currency Selection -->
-            <div class="form-group">
-                <label for="currency">Para Birimi</label>
-                <select v-model="currency" id="currency">
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    <option value="TRY">TRY</option>
-                </select>
             </div>
 
             <!-- Image Upload -->
@@ -92,15 +81,16 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { computed } from "vue";
 
+const store = useStore();
 const title = ref("");
 const author = ref("");
 const price = ref(0);
-const currency = ref("USD");
+const currency = computed(() => store.getters["currency/baseCurrency"]);
 const image = ref("");
 const category = ref("");
 const description = ref("");
-const store = useStore();
 const router = useRouter();
 
 const triggerFileInput = () => {
@@ -132,7 +122,6 @@ const addBook = () => {
             title: title.value,
             author: author.value,
             price: price.value,
-            currency: currency.value,
             image: image.value,
             category: category.value,
             description: description.value,
@@ -141,7 +130,6 @@ const addBook = () => {
         title.value = "";
         author.value = "";
         price.value = 0;
-        currency.value = "USD";
         image.value = "";
         category.value = "";
         description.value = "";

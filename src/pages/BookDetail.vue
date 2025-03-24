@@ -4,7 +4,7 @@
         <img :src="book.image" alt="Kitap Resmi" class="book-image" />
         <p class="book-info"><strong>Yazar:</strong> {{ book.author }}</p>
         <p class="book-info">
-            <strong>Fiyat:</strong> {{ convertedPrice }} {{ book.currency }}
+            <strong>Fiyat:</strong> {{ book.price }} {{ currency }}
         </p>
         <p class="book-info"><strong>Kategori:</strong> {{ book.category }}</p>
         <p class="book-info">
@@ -65,12 +65,7 @@
                 v-model="editedBook.description"
                 placeholder="Açıklama"
                 class="input-field"></textarea>
-            <select v-model="editedBook.currency" class="select-field">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
-                <option value="TRY">TRY</option>
-            </select>
+
             <div class="button-group">
                 <button @click="isEditing = false" class="cancel-button">
                     İptal
@@ -101,13 +96,13 @@ const books = computed(() => store.state.books.books);
 const book = computed(() =>
     books.value.find((book) => book.id == route.params.id)
 );
+const currency = computed(() => store.getters["currency/baseCurrency"]);
 
 const editedBook = ref({
     id: book.value?.id,
     title: book.value?.title || "",
     author: book.value?.author || "",
     price: book.value?.price || "",
-    currency: book.value?.currency || "",
     image: book.value?.image || "",
     category: book.value?.category || "",
     description: book.value?.description || "",
@@ -136,13 +131,6 @@ const toggleFavorite = () => {
         store.dispatch("favorites/addToFavorites", book.value);
     }
 };
-
-const convertedPrice = computed(() => {
-    if (book.value && store.getters["books/getPriceInCurrency"]) {
-        return store.getters["books/getPriceInCurrency"](book.value.price);
-    }
-    return book.value?.price;
-});
 
 const deleteBook = () => {
     if (confirm("Kitabı silmek istediğinizden emin misiniz?")) {
