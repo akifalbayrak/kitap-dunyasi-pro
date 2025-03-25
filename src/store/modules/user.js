@@ -1,7 +1,13 @@
 export default {
     namespaced: true,
     state: {
-        users: JSON.parse(localStorage.getItem("users")) || null,
+        users:
+            JSON.parse(localStorage.getItem("users")) ||
+            Array.from({ length: 20 }, (_, i) => ({
+                name: `User ${i + 1}`,
+                email: `user${i}@example.com`,
+                password: "password123",
+            })),
         currentUser: JSON.parse(localStorage.getItem("user")) || null,
         token: localStorage.getItem("token") || null,
         resetPasswordMail: null,

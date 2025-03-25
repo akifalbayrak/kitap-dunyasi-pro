@@ -70,6 +70,18 @@
                     required></textarea>
             </div>
 
+            <!-- Language Button -->
+            <div class="form-group">
+                <label for="language">Dil</label>
+                <select v-model="language" id="language" required>
+                    <option value="tr">Türkçe</option>
+                    <option value="en">İngilizce</option>
+                    <option value="de">Almanca</option>
+                    <option value="fr">Fransızca</option>
+                    <option value="es">İspanyolca</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <button type="submit" class="submit-button">Ekle</button>
             </div>
@@ -91,6 +103,7 @@ const currency = computed(() => store.getters["currency/baseCurrency"]);
 const image = ref("");
 const category = ref("");
 const description = ref("");
+const language = ref("tr");
 const router = useRouter();
 
 const triggerFileInput = () => {
@@ -115,7 +128,8 @@ const addBook = () => {
         price.value >= 0 &&
         image.value &&
         category.value &&
-        description.value
+        description.value &&
+        language.value
     ) {
         const newBook = {
             id: Date.now(),
@@ -126,6 +140,7 @@ const addBook = () => {
             category: category.value,
             description: description.value,
             currency: currency.value,
+            language: language.value,
         };
         store.dispatch("books/addBook", newBook);
         title.value = "";
@@ -134,6 +149,7 @@ const addBook = () => {
         image.value = "";
         category.value = "";
         description.value = "";
+        language.value = "tr";
         router.push("/");
     }
 };
