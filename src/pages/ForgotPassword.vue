@@ -14,7 +14,16 @@
         <button @click="sendResetEmail" class="reset-btn">
             Şifreyi Sıfırla
         </button>
-        <p v-if="message" class="reset-message">{{ message }}</p>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <div class="links-container">
+            <router-link to="/forgot-password" class="link"
+                >Şifremi Unuttum</router-link
+            >
+            |
+            <router-link to="/login" class="link"
+                >Zaten hesabınız var mı? Giriş yapın.</router-link
+            >
+        </div>
     </div>
 </template>
 
@@ -24,17 +33,14 @@ import store from "@/store";
 import { ref } from "vue";
 
 const email = ref("");
-const message = ref("");
+const errorMessage = ref("");
 
 const sendResetEmail = async () => {
     const response = await store.dispatch("user/forgotPassword", email.value);
     if (response === "success") {
-        message.value =
-            "Şifre sıfırlama talimatları e-posta adresinize gönderildi.";
         router.push("/reset-password");
-        return;
     } else {
-        message.value = "Bu e-posta adresiyle bir hesap bulunamadı.";
+        errorMessage.value = response;
     }
 };
 </script>
@@ -97,18 +103,29 @@ const sendResetEmail = async () => {
     background-color: #3498db;
 }
 
-/* Message Styling */
-.reset-message {
+/* Error Message Styling */
+.error {
+    color: #d9534f;
     text-align: center;
     font-size: 14px;
     margin-top: 15px;
 }
 
-.reset-message.success {
-    color: #5bc0de;
+/* Links Styling */
+.links-container {
+    text-align: center;
+    margin-top: 20px;
 }
 
-.reset-message.error {
-    color: #d9534f;
+.link {
+    color: #2980b9;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 0 5px;
+    transition: color 0.3s;
+}
+
+.link:hover {
+    color: #3498db;
 }
 </style>

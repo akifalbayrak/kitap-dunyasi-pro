@@ -21,6 +21,7 @@
             <router-link to="/forgot-password" class="link"
                 >Şifremi Unuttum</router-link
             >
+            |
             <router-link to="/register" class="link"
                 >Hesabınız yok mu? Kayıt olun.</router-link
             >
