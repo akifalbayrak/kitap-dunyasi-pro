@@ -175,10 +175,14 @@ function getBookById(id) {
 .edit-btn,
 .save-btn,
 .cancel-btn {
-    padding: 10px 20px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #3498db;
 }
 
 .logout-btn {
@@ -202,7 +206,7 @@ function getBookById(id) {
 }
 
 .save-btn {
-    background-color: #3d9d51;
+    background-color: #2980b9;
     color: #fff;
 }
 

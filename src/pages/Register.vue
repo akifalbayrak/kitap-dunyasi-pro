@@ -50,7 +50,11 @@ const successMessage = ref("");
 const register = async () => {
     const response = await store.dispatch("user/register", user.value);
     if (response === "success") {
-        router.push("/login");
+        const response = await store.dispatch("user/login", {
+            email: user.value.email,
+            password: user.value.password,
+        });
+        if (response === "success") router.push("/profile");
     } else {
         errorMessage.value = response;
     }

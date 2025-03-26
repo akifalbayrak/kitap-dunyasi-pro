@@ -8,13 +8,12 @@
 
             <nav :class="['nav-links', { active: isMenuOpen }]">
                 <router-link to="/" class="nav-link">Ana Sayfa</router-link>
-                <router-link to="/add-book" class="nav-link"
+                <router-link v-if="user" to="/add-book" class="nav-link"
                     >Kitap Ekle</router-link
                 >
-                <span v-if="user" class="user-email">{{ user.email }}</span>
-                <router-link v-if="user" to="/profile" class="nav-link"
-                    >Profil</router-link
-                >
+                <router-link v-if="user" to="/profile" class="nav-link">{{
+                    user.name
+                }}</router-link>
                 <router-link v-if="!user" to="/login" class="nav-link login"
                     >Giriş Yap</router-link
                 >
