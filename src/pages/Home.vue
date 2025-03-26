@@ -420,11 +420,15 @@ const filteredBooks = computed(() => {
     }
 
     if (filters.value.minYear) {
-        result = result.filter((book) => book.year >= filters.value.minYear);
+        result = result.filter(
+            (book) => book.releaseYear >= filters.value.minYear
+        );
     }
 
     if (filters.value.maxYear) {
-        result = result.filter((book) => book.year <= filters.value.maxYear);
+        result = result.filter(
+            (book) => book.releaseYear <= filters.value.maxYear
+        );
     }
 
     if (filters.value.pageCount) {

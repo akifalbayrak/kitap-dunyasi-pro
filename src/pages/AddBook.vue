@@ -60,6 +60,17 @@
                     required />
             </div>
 
+            <!-- Release Year -->
+            <div class="form-group">
+                <label for="releaseYear">Yayınlanma Yılı</label>
+                <input
+                    v-model.number="releaseYear"
+                    id="releaseYear"
+                    placeholder="Yayınlanma Yılı"
+                    type="number"
+                    required />
+            </div>
+
             <!-- Description -->
             <div class="form-group">
                 <label for="description">Açıklama</label>
@@ -104,6 +115,7 @@ const image = ref("");
 const category = ref("");
 const description = ref("");
 const language = ref("tr");
+const releaseYear = ref(2025);
 const router = useRouter();
 
 const triggerFileInput = () => {
@@ -129,7 +141,8 @@ const addBook = () => {
         image.value &&
         category.value &&
         description.value &&
-        language.value
+        language.value &&
+        releaseYear.value
     ) {
         const newBook = {
             id: Date.now(),
@@ -141,6 +154,7 @@ const addBook = () => {
             description: description.value,
             currency: currency.value,
             language: language.value,
+            releaseYear: releaseYear.value,
         };
         store.dispatch("books/addBook", newBook);
         title.value = "";
@@ -150,6 +164,7 @@ const addBook = () => {
         category.value = "";
         description.value = "";
         language.value = "tr";
+        releaseYear.value = 2025;
         router.push("/");
     }
 };
