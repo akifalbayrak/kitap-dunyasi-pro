@@ -41,9 +41,18 @@
                 <h3 class="section-title">Favoriler</h3>
                 <ul>
                     <li v-for="favorite in userFavorites()" :key="favorite.id">
-                        {{ favorite.title }}
+                        <span>{{ favorite.title }}</span>
+                        <span>({{ favorite.author }})</span>
+                        <button
+                            @click="removeFavorite(favorite.id)"
+                            class="remove-btn">
+                            Sil
+                        </button>
                     </li>
                 </ul>
+            </div>
+            <div v-else class="no-favorites">
+                <p>Favorileriniz bulunmamaktadır.</p>
             </div>
             <div v-if="userBooks().length" class="books-section">
                 <h3 class="section-title">Eklenen/Düzenlenen Kitaplar</h3>
@@ -75,8 +84,16 @@
                             </p>
                             <p class="comment-text">{{ comment.text }}</p>
                         </div>
+                        <button
+                            class="remove-btn"
+                            @click="removeComment(comment.id)">
+                            Sil
+                        </button>
                     </li>
                 </ul>
+            </div>
+            <div v-else class="no-comments">
+                <p>Henüz yorum yapmamışsınız.</p>
             </div>
         </div>
         <div v-else class="login-prompt">
@@ -119,6 +136,14 @@ function userFavorites() {
     return store.getters["favorites/getUserFavorites"](user.value?.email);
 }
 
+function removeFavorite(id) {
+    store.dispatch("favorites/removeFromFavorites", id);
+}
+
+function removeComment(id) {
+    store.dispatch("comments/deleteComment", id);
+}
+
 function userBooks() {
     return store.getters["books/getUserBooks"](user.value?.email);
 }
@@ -137,7 +162,7 @@ function getBookById(id) {
     padding: 20px;
     font-family: Arial, sans-serif;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 50px auto;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -274,6 +299,27 @@ function getBookById(id) {
 .comments-section li {
     margin-bottom: 10px;
     font-size: 1.1rem;
+}
+
+.remove-btn {
+    padding: 5px 10px;
+    background-color: #ff4f5c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+.no-favorites {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.no-comments {
+    text-align: center;
+    margin-top: 20px;
 }
 
 .login-prompt {
