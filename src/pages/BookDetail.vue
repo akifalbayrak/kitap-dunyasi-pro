@@ -10,6 +10,9 @@
         <p class="book-info">
             <strong>Açıklama:</strong> {{ book.description }}
         </p>
+        <p class="book-info">
+            <strong>Yayınlanma Yılı:</strong> {{ book.releaseYear }}
+        </p>
 
         <div class="button-group">
             <button
@@ -56,6 +59,11 @@
             <input
                 v-model="editedBook.price"
                 placeholder="Fiyat"
+                class="input-field" />
+            <input
+                v-model="editedBook.releaseYear"
+                placeholder="Yayınlanma Yılı"
+                type="number"
                 class="input-field" />
             <input
                 v-model="editedBook.category"
@@ -117,6 +125,7 @@ const editedBook = ref({
     language: book.value?.language || "tr",
     description: book.value?.description || "",
     currency: book.value?.currency || currency.value,
+    releaseYear: book.value?.releaseYear || 2025,
 });
 
 const currentUser = computed(() => store.state.user.currentUser);

@@ -11,6 +11,7 @@ const state = {
             description: `Description for Science Fiction Book ${i + 1}`,
             image: `https://picsum.photos/seed/sci-fi-${i}/400/600`,
             email: `user${i % 20}@example.com`,
+            releaseYear: 2000 + i,
         })),
         ...Array.from({ length: 10 }, (_, i) => ({
             id: Date.now() + 20 + i,
@@ -23,6 +24,7 @@ const state = {
             description: `Description for Action Book ${i + 1}`,
             image: `https://picsum.photos/seed/action-${i}/400/600`,
             email: `user${(i + 20) % 20}@example.com`,
+            releaseYear: 2010 + i,
         })),
         ...Array.from({ length: 5 }, (_, i) => ({
             id: Date.now() + 30 + i,
@@ -35,6 +37,7 @@ const state = {
             description: `Description for Fairy Tale Book ${i + 1}`,
             image: `https://picsum.photos/seed/fairytale-${i}/400/600`,
             email: `user${(i + 30) % 20}@example.com`,
+            releaseYear: 2020 + i,
         })),
     ],
 };
