@@ -52,7 +52,7 @@ const login = async () => {
 /* General Layout */
 .login-container {
     max-width: 400px;
-    margin: 0 auto;
+    margin: 50px auto;
     padding: 30px;
     background-color: #f9f9f9;
     border-radius: 8px;

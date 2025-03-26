@@ -61,6 +61,15 @@
                 v-model="editedBook.category"
                 placeholder="Kategori"
                 class="input-field" />
+
+            <select v-model="editedBook.language" id="language" required>
+                <option value="tr">Türkçe</option>
+                <option value="en">İngilizce</option>
+                <option value="de">Almanca</option>
+                <option value="fr">Fransızca</option>
+                <option value="es">İspanyolca</option>
+            </select>
+
             <textarea
                 v-model="editedBook.description"
                 placeholder="Açıklama"
@@ -105,6 +114,7 @@ const editedBook = ref({
     price: book.value?.price || "",
     image: book.value?.image || "",
     category: book.value?.category || "",
+    language: book.value?.language || "tr",
     description: book.value?.description || "",
     currency: book.value?.currency || currency.value,
 });
