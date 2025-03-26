@@ -40,9 +40,24 @@
             <div v-if="userFavorites().length" class="favorites-section">
                 <h3 class="section-title">Favoriler</h3>
                 <ul>
-                    <li v-for="favorite in userFavorites()" :key="favorite.id">
-                        <span>{{ favorite.title }}</span>
-                        <span>({{ favorite.author }})</span>
+                    <li
+                        v-for="favorite in userFavorites()"
+                        :key="favorite.id"
+                        class="favorite-item">
+                        <img
+                            :src="favorite.image"
+                            alt="Favorite Image"
+                            class="book-image"
+                            width="150"
+                            height="150" />
+                        <div class="book-info">
+                            <h4 class="book-title">
+                                {{ favorite.title }}
+                            </h4>
+                            <p class="book-author">
+                                {{ favorite.author }}
+                            </p>
+                        </div>
                         <button
                             @click="removeFavorite(favorite.id)"
                             class="remove-btn">
@@ -342,7 +357,8 @@ function getBookById(id) {
     margin: 0;
 }
 
-.comment-item {
+.comment-item,
+.favorite-item {
     display: flex;
     align-items: center;
     padding: 15px;
@@ -353,7 +369,8 @@ function getBookById(id) {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.comment-item:hover {
+.comment-item:hover,
+.favorite-item:hover {
     background-color: #f1f1f1;
     transform: scale(1.02);
 }
@@ -439,7 +456,8 @@ function getBookById(id) {
         padding: 12px;
     }
 
-    .comment-item {
+    .comment-item,
+    .favorite-item {
         flex-direction: column;
         align-items: flex-start;
         padding: 12px;
@@ -502,7 +520,8 @@ function getBookById(id) {
         padding: 10px;
     }
 
-    .comment-item {
+    .comment-item,
+    .favorite-item {
         padding: 10px;
         flex-direction: column;
     }
