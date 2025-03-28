@@ -25,6 +25,10 @@
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         <p v-if="successMessage" class="success">{{ successMessage }}</p>
         <div class="links-container">
+            <router-link to="/forgot-password" class="link"
+                >Şifremi Unuttum</router-link
+            >
+            |
             <router-link to="/login" class="link"
                 >Zaten hesabınız var mı? Giriş yapın.</router-link
             >
@@ -45,11 +49,14 @@ const successMessage = ref("");
 
 const register = async () => {
     const response = await store.dispatch("user/register", user.value);
-    if (response === "error") {
-        errorMessage.value = response;
+    if (response === "success") {
+        const response = await store.dispatch("user/login", {
+            email: user.value.email,
+            password: user.value.password,
+        });
+        if (response === "success") router.push("/profile");
     } else {
-        successMessage.value = response;
-        router.push("/profile");
+        errorMessage.value = response;
     }
 };
 </script>
@@ -58,7 +65,7 @@ const register = async () => {
 /* General Layout */
 .register-container {
     max-width: 400px;
-    margin: 0 auto;
+    margin: 50px auto;
     padding: 30px;
     background-color: #f9f9f9;
     border-radius: 8px;

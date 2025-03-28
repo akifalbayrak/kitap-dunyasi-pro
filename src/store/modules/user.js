@@ -60,7 +60,7 @@ export default {
             const users = JSON.parse(localStorage.getItem("users")) || [];
             const user = users.find((user) => user.email === userData.email);
             if (user) {
-                return "error";
+                return "Kullanıcı zaten mevcut.";
             } else {
                 commit("REGISTER_USER", userData);
                 return "success";
@@ -78,7 +78,7 @@ export default {
                 commit("SET_TOKEN", "token");
                 return "success";
             } else {
-                return "error";
+                return "Kullanıcı adı veya şifre hatalı.";
             }
         },
         editUser({ commit }, userData) {
@@ -95,7 +95,7 @@ export default {
                 commit("FORGOT_PASSWORD", email);
                 return "success";
             }
-            return "error";
+            return "Kullanıcı bulunamadı.";
         },
         resetPassword({ commit, state }, { newPassword }) {
             const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -106,7 +106,7 @@ export default {
                 commit("RESET_PASSWORD", { newPassword });
                 return "success";
             }
-            return "error";
+            return "Kullanıcı bulunamadı.";
         },
     },
     getters: {

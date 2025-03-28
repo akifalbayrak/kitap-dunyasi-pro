@@ -40,10 +40,34 @@
             <div v-if="userFavorites().length" class="favorites-section">
                 <h3 class="section-title">Favoriler</h3>
                 <ul>
-                    <li v-for="favorite in userFavorites()" :key="favorite.id">
-                        {{ favorite.title }}
+                    <li
+                        v-for="favorite in userFavorites()"
+                        :key="favorite.id"
+                        class="favorite-item">
+                        <img
+                            :src="favorite.image"
+                            alt="Favorite Image"
+                            class="book-image"
+                            width="150"
+                            height="150" />
+                        <div class="book-info">
+                            <h4 class="book-title">
+                                {{ favorite.title }}
+                            </h4>
+                            <p class="book-author">
+                                {{ favorite.author }}
+                            </p>
+                        </div>
+                        <button
+                            @click="removeFavorite(favorite.id)"
+                            class="remove-btn">
+                            Sil
+                        </button>
                     </li>
                 </ul>
+            </div>
+            <div v-else class="no-favorites">
+                <p>Favorileriniz bulunmamaktadır.</p>
             </div>
             <div v-if="userBooks().length" class="books-section">
                 <h3 class="section-title">Eklenen/Düzenlenen Kitaplar</h3>
@@ -75,8 +99,16 @@
                             </p>
                             <p class="comment-text">{{ comment.text }}</p>
                         </div>
+                        <button
+                            class="remove-btn"
+                            @click="removeComment(comment.id)">
+                            Sil
+                        </button>
                     </li>
                 </ul>
+            </div>
+            <div v-else class="no-comments">
+                <p>Henüz yorum yapmamışsınız.</p>
             </div>
         </div>
         <div v-else class="login-prompt">
@@ -119,6 +151,14 @@ function userFavorites() {
     return store.getters["favorites/getUserFavorites"](user.value?.email);
 }
 
+function removeFavorite(id) {
+    store.dispatch("favorites/removeFromFavorites", id);
+}
+
+function removeComment(id) {
+    store.dispatch("comments/deleteComment", id);
+}
+
 function userBooks() {
     return store.getters["books/getUserBooks"](user.value?.email);
 }
@@ -137,7 +177,7 @@ function getBookById(id) {
     padding: 20px;
     font-family: Arial, sans-serif;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 50px auto;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -175,10 +215,14 @@ function getBookById(id) {
 .edit-btn,
 .save-btn,
 .cancel-btn {
-    padding: 10px 20px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #3498db;
 }
 
 .logout-btn {
@@ -202,7 +246,7 @@ function getBookById(id) {
 }
 
 .save-btn {
-    background-color: #3d9d51;
+    background-color: #2980b9;
     color: #fff;
 }
 
@@ -272,6 +316,27 @@ function getBookById(id) {
     font-size: 1.1rem;
 }
 
+.remove-btn {
+    padding: 5px 10px;
+    background-color: #ff4f5c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+.no-favorites {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.no-comments {
+    text-align: center;
+    margin-top: 20px;
+}
+
 .login-prompt {
     text-align: center;
     margin-top: 50px;
@@ -292,7 +357,8 @@ function getBookById(id) {
     margin: 0;
 }
 
-.comment-item {
+.comment-item,
+.favorite-item {
     display: flex;
     align-items: center;
     padding: 15px;
@@ -303,7 +369,8 @@ function getBookById(id) {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.comment-item:hover {
+.comment-item:hover,
+.favorite-item:hover {
     background-color: #f1f1f1;
     transform: scale(1.02);
 }
@@ -389,7 +456,8 @@ function getBookById(id) {
         padding: 12px;
     }
 
-    .comment-item {
+    .comment-item,
+    .favorite-item {
         flex-direction: column;
         align-items: flex-start;
         padding: 12px;
@@ -452,7 +520,8 @@ function getBookById(id) {
         padding: 10px;
     }
 
-    .comment-item {
+    .comment-item,
+    .favorite-item {
         padding: 10px;
         flex-direction: column;
     }
