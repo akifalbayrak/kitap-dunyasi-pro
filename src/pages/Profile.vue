@@ -98,6 +98,14 @@
                                 {{ getBookById(comment.bookId).author }}
                             </p>
                             <p class="comment-text">{{ comment.text }}</p>
+                            <div class="comment-rating">
+                                <span
+                                    v-for="star in 5"
+                                    :key="star"
+                                    :class="{ filled: star <= comment.rating }"
+                                    >★</span
+                                >
+                            </div>
                         </div>
                         <button
                             class="remove-btn"
@@ -402,6 +410,22 @@ function getBookById(id) {
     font-size: 1rem;
     color: #444;
     line-height: 1.5;
+}
+
+.comment-rating {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f39c12;
+    margin-top: 5px;
+}
+
+.comment-rating span {
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.comment-rating span.filled {
+    color: #f39c12;
 }
 
 /* Responsive Styles */

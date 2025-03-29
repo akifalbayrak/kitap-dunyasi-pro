@@ -6,11 +6,29 @@
             v-if="currentUser"
             @submit.prevent="handleSubmit"
             class="comment-form">
+            <div class="rating-container">
+                <label>Puanınız:</label>
+                <div class="stars">
+                    <span
+                        v-for="star in 5"
+                        :key="star"
+                        @click="setRating(star)"
+                        @mouseover="hoverRating = star"
+                        @mouseleave="hoverRating = rating"
+                        :class="{
+                            active: star <= rating,
+                            hover: star <= hoverRating,
+                        }"
+                        >★</span
+                    >
+                </div>
+            </div>
             <textarea
                 v-model="newComment"
                 placeholder="Yorumunuzu yazın..."
                 required
-                class="comment-input"></textarea>
+                class="comment-input">
+            </textarea>
             <button type="submit" class="submit-button">Yorum Ekle</button>
         </form>
 
@@ -20,6 +38,14 @@
                 :key="comment.id"
                 class="comment">
                 <p class="comment-text">{{ comment.text }}</p>
+                <p class="comment-rating">
+                    <span
+                        v-for="star in 5"
+                        :key="star"
+                        :class="{ filled: star <= comment.rating }"
+                        >★</span
+                    >
+                </p>
                 <small class="comment-meta">
                     {{ comment.userEmail }} -
                     {{ formatDate(comment.timestamp) }}
@@ -48,15 +74,26 @@ const store = useStore();
 const route = useRoute();
 
 const newComment = ref("");
+const rating = ref(5); // Default 5 stars
+const hoverRating = ref(0);
 const bookId = route.params.id;
 const currentUser = computed(() => store.state.user.currentUser);
 const bookComments = computed(() =>
     store.getters["comments/getBookComments"](bookId)
 );
 
+const setRating = (star) => {
+    rating.value = star;
+};
+
 const handleSubmit = () => {
-    store.dispatch("comments/addComment", { bookId, text: newComment.value });
+    store.dispatch("comments/addComment", {
+        bookId,
+        text: newComment.value,
+        rating: rating.value,
+    });
     newComment.value = "";
+    rating.value = 5; // Reset to default
 };
 
 const deleteComment = (id) => {
@@ -155,5 +192,43 @@ const formatDate = (dateString) => {
     font-size: 1rem;
     color: #777;
     margin-top: 10px;
+}
+
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.stars span {
+    font-size: 1.5rem;
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.stars span.active,
+.stars span.hover {
+    color: #f39c12;
+}
+
+.comment-rating {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f39c12;
+}
+
+.comment-rating span {
+    color: #ccc;
+}
+
+.comment-rating span.filled {
+    color: #f39c12;
 }
 </style>

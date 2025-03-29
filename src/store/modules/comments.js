@@ -16,7 +16,7 @@ const mutations = {
 };
 
 const actions = {
-    addComment({ commit, rootState }, { bookId, text }) {
+    addComment({ commit, rootState }, { bookId, text, rating }) {
         const userEmail = rootState.user.currentUser?.email;
         if (!userEmail) return;
 
@@ -25,6 +25,7 @@ const actions = {
             bookId,
             userEmail,
             text,
+            rating, // Yıldız ekleme
             timestamp: new Date().toISOString(),
         };
 

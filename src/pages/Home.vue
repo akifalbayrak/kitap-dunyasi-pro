@@ -210,6 +210,7 @@
                             class="book-hover-overlay"
                             :class="{ active: hoveredBook === book.id }">
                             <button
+                                v-if="logged"
                                 class="favorite-btn"
                                 @click.prevent="toggleFavorite(book)"
                                 :class="{ favorited: isFavorite(book.id) }">
@@ -311,6 +312,7 @@ import BookCarousel from "@/components/BookCarousel.vue";
 
 const store = useStore();
 const books = computed(() => store.state.books.books);
+const logged = computed(() => store.getters["user/isAuthenticated"]);
 const currency = computed(() => store.getters["currency/baseCurrency"]);
 
 // Initialize viewMode from localStorage or default to 'grid'
