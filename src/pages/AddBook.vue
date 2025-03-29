@@ -53,11 +53,14 @@
             <!-- Category -->
             <div class="form-group">
                 <label for="category">Kategori</label>
-                <input
-                    v-model="category"
-                    id="category"
-                    placeholder="Kategori"
-                    required />
+                <select v-model="category" id="category" required>
+                    <option value="" disabled selected>Kategori Seçin</option>
+                    <option value="roman">Roman</option>
+                    <option value="bilim">Bilim</option>
+                    <option value="tarih">Tarih</option>
+                    <option value="felsefe">Felsefe</option>
+                    <option value="sanat">Sanat</option>
+                </select>
             </div>
 
             <!-- Release Year -->

@@ -65,12 +65,25 @@
                 placeholder="Yayınlanma Yılı"
                 type="number"
                 class="input-field" />
-            <input
-                v-model="editedBook.category"
-                placeholder="Kategori"
-                class="input-field" />
 
-            <select v-model="editedBook.language" id="language" required>
+            <select
+                v-model="editedBook.category"
+                id="category"
+                required
+                class="select-field">
+                <option value="" disabled>Kategori Seçin</option>
+                <option value="roman">Roman</option>
+                <option value="bilim">Bilim</option>
+                <option value="tarih">Tarih</option>
+                <option value="felsefe">Felsefe</option>
+                <option value="sanat">Sanat</option>
+            </select>
+
+            <select
+                v-model="editedBook.language"
+                id="language"
+                required
+                class="select-field">
                 <option value="tr">Türkçe</option>
                 <option value="en">İngilizce</option>
                 <option value="de">Almanca</option>
