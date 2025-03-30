@@ -108,7 +108,10 @@
                         <option
                             v-for="category in uniqueCategories"
                             :value="category">
-                            {{ category }}
+                            {{
+                                category.charAt(0).toUpperCase() +
+                                category.slice(1)
+                            }}
                         </option>
                     </select>
                 </div>
@@ -373,15 +376,6 @@ const uniqueCategories = computed(() => {
         if (book.category) categories.add(book.category);
     });
     return Array.from(categories);
-});
-
-// Price range for filter
-const minPrice = computed(() => {
-    return Math.floor(Math.min(...books.value.map((b) => b.price)) || 0);
-});
-
-const maxPrice = computed(() => {
-    return Math.ceil(Math.max(...books.value.map((b) => b.price)) || 100);
 });
 
 // Featured books for carousel (first 5 books)
