@@ -22,7 +22,7 @@
                 </button>
                 <select
                     v-model="currency"
-                    @change="changeCurrency"
+                    @input="changeCurrency"
                     class="custom-select">
                     <option
                         v-for="option in currencyOptions"
@@ -38,7 +38,7 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const store = useStore();
 const user = computed(() => store.getters["user/getUser"]);
@@ -50,6 +50,10 @@ const changeCurrency = (e) => {
     store.dispatch("currency/changeBaseCurrency", e.target.value);
     store.dispatch("books/updateBooksCurrency");
 };
+
+onMounted(() => {
+    store.dispatch("currency/fetchRates");
+});
 
 const isMenuOpen = ref(false);
 const toggleMenu = () => {

@@ -6,7 +6,7 @@ const CACHE_DURATION = 30 * 60 * 1000; // 30 dakika
 
 const state = {
     rates: JSON.parse(localStorage.getItem(CACHE_KEY)) || {},
-    baseCurrency: JSON.parse(localStorage.getItem("baseCurrency")) || "TRY",
+    baseCurrency: JSON.parse(localStorage.getItem("baseCurrency")) || "USD",
     listCurrency: [
         "AUD",
         "BGN",

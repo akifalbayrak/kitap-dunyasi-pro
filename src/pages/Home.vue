@@ -239,7 +239,13 @@
                         <h3>{{ book.title }}</h3>
                         <p class="author">{{ book.author }}</p>
                         <p class="price">
-                            {{ formatPrice(book.price) }} {{ currency }}
+                            {{
+                                book.price === 0
+                                    ? "Ücretsiz"
+                                    : formatPrice(book.price) +
+                                      " " +
+                                      book.currency
+                            }}
                         </p>
                         <div class="book-meta">
                             <span class="category">{{ book.category }}</span>

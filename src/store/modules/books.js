@@ -2,42 +2,68 @@ const state = {
     books: JSON.parse(localStorage.getItem("books")) || [
         ...Array.from({ length: 20 }, (_, i) => ({
             id: Date.now() + i,
-            title: `Science Fiction Book ${i + 1}`,
+            title: `Roman Book ${i + 1}`,
             author: `Author ${i + 1}`,
             price: (Math.random() * 50 + 10).toFixed(2),
             currency: "USD",
-            category: "Science Fiction",
+            category: "Roman",
             language: "en",
-            description: `Description for Science Fiction Book ${i + 1}`,
-            image: `https://picsum.photos/seed/sci-fi-${i}/400/600`,
+            description: `Description for Roman Book ${i + 1}`,
+            image: `https://picsum.photos/seed/roman-${i}/400/600`,
             email: `user${i % 20}@example.com`,
             releaseYear: 2000 + i,
         })),
         ...Array.from({ length: 10 }, (_, i) => ({
             id: Date.now() + 20 + i,
-            title: `Action Book ${i + 1}`,
+            title: `Bilim Book ${i + 1}`,
             author: `Author ${i + 21}`,
             price: (Math.random() * 50 + 10).toFixed(2),
             currency: "USD",
-            category: "Action",
+            category: "Bilim",
             language: "tr",
-            description: `Description for Action Book ${i + 1}`,
-            image: `https://picsum.photos/seed/action-${i}/400/600`,
+            description: `Description for Bilim Book ${i + 1}`,
+            image: `https://picsum.photos/seed/bilim-${i}/400/600`,
             email: `user${(i + 20) % 20}@example.com`,
             releaseYear: 2010 + i,
         })),
         ...Array.from({ length: 5 }, (_, i) => ({
             id: Date.now() + 30 + i,
-            title: `Fairy Tale Book ${i + 1}`,
+            title: `Tarih Book ${i + 1}`,
             author: `Author ${i + 31}`,
             price: (Math.random() * 50 + 10).toFixed(2),
             currency: "USD",
-            category: "Fairy Tale",
+            category: "Tarih",
             language: "es",
-            description: `Description for Fairy Tale Book ${i + 1}`,
-            image: `https://picsum.photos/seed/fairytale-${i}/400/600`,
+            description: `Description for Tarih Book ${i + 1}`,
+            image: `https://picsum.photos/seed/tarih-${i}/400/600`,
             email: `user${(i + 30) % 20}@example.com`,
             releaseYear: 2020 + i,
+        })),
+        ...Array.from({ length: 5 }, (_, i) => ({
+            id: Date.now() + 35 + i,
+            title: `Felsefe Book ${i + 1}`,
+            author: `Author ${i + 36}`,
+            price: (Math.random() * 50 + 10).toFixed(2),
+            currency: "TRY",
+            category: "Felsefe",
+            language: "en",
+            description: `Description for Felsefe Book ${i + 1}`,
+            image: `https://picsum.photos/seed/felsefe-${i}/400/600`,
+            email: `user${(i + 35) % 20}@example.com`,
+            releaseYear: 2025 + i,
+        })),
+        ...Array.from({ length: 5 }, (_, i) => ({
+            id: Date.now() + 40 + i,
+            title: `Sanat Book ${i + 1}`,
+            author: `Author ${i + 41}`,
+            price: (Math.random() * 50 + 10).toFixed(2),
+            currency: "USD",
+            category: "Sanat",
+            language: "tr",
+            description: `Description for Sanat Book ${i + 1}`,
+            image: `https://picsum.photos/seed/sanat-${i}/400/600`,
+            email: `user${(i + 40) % 20}@example.com`,
+            releaseYear: 2030 + i,
         })),
     ],
 };
@@ -62,11 +88,7 @@ const mutations = {
             localStorage.setItem("books", JSON.stringify(state.books));
         }
     },
-    UPDATE_BOOKS_CURRENCY(state) {
-        const baseCurrency = localStorage
-            .getItem("baseCurrency")
-            .replace(/"/g, "");
-        const rates = JSON.parse(localStorage.getItem("currencyRates"));
+    UPDATE_BOOKS_CURRENCY(state, { baseCurrency, rates }) {
         state.books = state.books.map((book) => {
             const newPrice = (
                 (book.price * rates[baseCurrency]) /
@@ -105,8 +127,13 @@ const actions = {
             commit("UPDATE_BOOK", { ...updatedBook, email: currentUser.email });
         }
     },
-    updateBooksCurrency({ commit }) {
-        commit("UPDATE_BOOKS_CURRENCY");
+    updateBooksCurrency({ commit, rootState }) {
+        const baseCurrency = rootState.currency.baseCurrency;
+        const rates = rootState.currency.rates;
+        commit("UPDATE_BOOKS_CURRENCY", {
+            baseCurrency,
+            rates,
+        });
     },
 };
 
