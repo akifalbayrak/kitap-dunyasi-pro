@@ -46,6 +46,8 @@
                             v-for="star in 5"
                             :key="star"
                             @click="editedRating = star"
+                            @mouseover="hoverRating = star"
+                            @mouseleave="hoverRating = editedRating"
                             :class="{
                                 active: star <= editedRating,
                                 hover: star <= hoverRating,
