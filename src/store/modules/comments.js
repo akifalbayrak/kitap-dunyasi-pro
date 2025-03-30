@@ -53,6 +53,18 @@ const getters = {
               )
             : [];
     },
+    getRatingByBookId: (state) => (bookId) => {
+        const bookComments = state.comments.filter(
+            (comment) => comment.bookId == bookId
+        );
+        if (bookComments.length === 0) return 0;
+
+        const totalRating = bookComments.reduce(
+            (acc, comment) => acc + comment.rating,
+            0
+        );
+        return totalRating / bookComments.length;
+    },
 };
 
 export default {

@@ -249,7 +249,9 @@
                         </p>
                         <div class="book-meta">
                             <span class="category">{{ book.category }}</span>
-                            <span class="rating">
+                            <span
+                                class="rating"
+                                v-if="getRatingByBookId(book.id)">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 576 512"
@@ -259,7 +261,7 @@
                                     <path
                                         d="M287.9 17.8L354 150.2l136.9 19.9c26.2 3.8 36.7 36 17.7 54.6L405.6 312l23.2 135.5c4.5 26.3-23.2 46-46.4 33.7L288 439.6l-94.4 49.6c-23.2 12.2-50.9-7.4-46.4-33.7L170.4 312 69.5 224.7c-19-18.6-8.5-50.8 17.7-54.6L224 150.2 287.9 17.8c11.7-23.6 45.6-23.9 57.1 0z" />
                                 </svg>
-                                {{ book.rating || "4.5" }}
+                                {{ getRatingByBookId(book.id) }}
                             </span>
                         </div>
                     </div>
@@ -320,6 +322,9 @@ const store = useStore();
 const books = computed(() => store.state.books.books);
 const logged = computed(() => store.getters["user/isAuthenticated"]);
 const currency = computed(() => store.getters["currency/baseCurrency"]);
+const getRatingByBookId = (bookId) => {
+    return store.getters["comments/getRatingByBookId"](bookId);
+};
 
 // Initialize viewMode from localStorage or default to 'grid'
 const viewMode = ref(localStorage.getItem("viewMode") || "grid");
