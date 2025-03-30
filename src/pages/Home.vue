@@ -244,7 +244,10 @@
                             }}
                         </p>
                         <div class="book-meta">
-                            <span class="category">{{ book.category }}</span>
+                            <span class="category">{{
+                                book.category.charAt(0).toUpperCase() +
+                                book.category.slice(1)
+                            }}</span>
                             <span
                                 class="rating"
                                 v-if="getRatingByBookId(book.id)">
@@ -850,7 +853,7 @@ onUnmounted(() => {
     }
 
     .search-box {
-        max-width: 100%;
+        max-width: 80%;
     }
 
     .books-container.grid {
