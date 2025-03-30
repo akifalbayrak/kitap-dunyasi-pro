@@ -142,12 +142,6 @@
                             placeholder="Max"
                             @change="applyFilters" />
                     </div>
-                    <input
-                        type="range"
-                        v-model.number="filters.maxPrice"
-                        :min="minPrice"
-                        :max="maxPrice"
-                        @change="applyFilters" />
                 </div>
 
                 <!-- Year Range -->
