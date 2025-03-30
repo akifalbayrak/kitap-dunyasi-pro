@@ -17,9 +17,13 @@
                 <router-link v-if="!user" to="/login" class="nav-link login"
                     >Giriş Yap</router-link
                 >
-                <button v-if="user" @click="logout" class="nav-link logout">
+                <router-link
+                    to="/"
+                    v-if="user"
+                    @click="logout"
+                    class="nav-link logout">
                     Çıkış Yap
-                </button>
+                </router-link>
                 <select
                     v-model="currency"
                     @input="changeCurrency"
