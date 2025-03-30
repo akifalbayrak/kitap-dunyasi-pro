@@ -108,7 +108,10 @@
                         <option
                             v-for="category in uniqueCategories"
                             :value="category">
-                            {{ category }}
+                            {{
+                                category.charAt(0).toUpperCase() +
+                                category.slice(1)
+                            }}
                         </option>
                     </select>
                 </div>
@@ -142,12 +145,6 @@
                             placeholder="Max"
                             @change="applyFilters" />
                     </div>
-                    <input
-                        type="range"
-                        v-model.number="filters.maxPrice"
-                        :min="minPrice"
-                        :max="maxPrice"
-                        @change="applyFilters" />
                 </div>
 
                 <!-- Year Range -->
@@ -238,11 +235,22 @@
                         <h3>{{ book.title }}</h3>
                         <p class="author">{{ book.author }}</p>
                         <p class="price">
-                            {{ formatPrice(book.price) }} {{ currency }}
+                            {{
+                                book.price === 0
+                                    ? "Ücretsiz"
+                                    : formatPrice(book.price) +
+                                      " " +
+                                      book.currency
+                            }}
                         </p>
                         <div class="book-meta">
-                            <span class="category">{{ book.category }}</span>
-                            <span class="rating">
+                            <span class="category">{{
+                                book.category.charAt(0).toUpperCase() +
+                                book.category.slice(1)
+                            }}</span>
+                            <span
+                                class="rating"
+                                v-if="getRatingByBookId(book.id)">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 576 512"
@@ -252,7 +260,7 @@
                                     <path
                                         d="M287.9 17.8L354 150.2l136.9 19.9c26.2 3.8 36.7 36 17.7 54.6L405.6 312l23.2 135.5c4.5 26.3-23.2 46-46.4 33.7L288 439.6l-94.4 49.6c-23.2 12.2-50.9-7.4-46.4-33.7L170.4 312 69.5 224.7c-19-18.6-8.5-50.8 17.7-54.6L224 150.2 287.9 17.8c11.7-23.6 45.6-23.9 57.1 0z" />
                                 </svg>
-                                {{ book.rating || "4.5" }}
+                                {{ getRatingByBookId(book.id) }}
                             </span>
                         </div>
                     </div>
@@ -305,13 +313,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import BookCarousel from "@/components/BookCarousel.vue";
 
 const store = useStore();
 const books = computed(() => store.state.books.books);
+const currentUser = computed(() => store.state.user.currentUser);
 const currency = computed(() => store.getters["currency/baseCurrency"]);
+const getRatingByBookId = (bookId) => {
+    return store.getters["comments/getRatingByBookId"](bookId);
+};
 
 // Initialize viewMode from localStorage or default to 'grid'
 const viewMode = ref(localStorage.getItem("viewMode") || "grid");
@@ -369,18 +381,9 @@ const uniqueCategories = computed(() => {
     return Array.from(categories);
 });
 
-// Price range for filter
-const minPrice = computed(() => {
-    return Math.floor(Math.min(...books.value.map((b) => b.price)) || 0);
-});
-
-const maxPrice = computed(() => {
-    return Math.ceil(Math.max(...books.value.map((b) => b.price)) || 100);
-});
-
-// Featured books for carousel (first 5 books)
+// Featured books for carousel (first 12 books)
 const featuredBooks = computed(() => {
-    return books.value.slice(0, 5);
+    return books.value.slice(0, 12);
 });
 
 // Filter and sort books
@@ -470,6 +473,10 @@ const isFavorite = (bookId) => {
 
 // Toggle favorite status
 const toggleFavorite = (book) => {
+    if (!currentUser.value) {
+        alert("Favorilere eklemek için giriş yapmalısınız.");
+        return;
+    }
     if (isFavorite(book.id)) {
         store.dispatch("favorites/removeFromFavorites", book.id);
     } else {
@@ -678,6 +685,9 @@ onUnmounted(() => {
 .books-container {
     display: grid;
     gap: 20px;
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .books-container.grid {
@@ -846,7 +856,7 @@ onUnmounted(() => {
     }
 
     .search-box {
-        max-width: 100%;
+        max-width: 80%;
     }
 
     .books-container.grid {

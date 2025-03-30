@@ -37,10 +37,44 @@
                     </button>
                 </div>
             </div>
-            <div v-if="userFavorites().length" class="favorites-section">
-                <h3 class="section-title">Favoriler</h3>
+            <div v-if="userBooks().length" class="books-section">
+                <h3 class="section-title">Eklenen/ Düzenlenen Kitaplar</h3>
+                <p>Kitap sayısı: {{ userBooks().length }}</p>
                 <ul>
                     <li
+                        @click="router.push('book/' + book.id)"
+                        v-for="book in userBooks()"
+                        :key="book.id"
+                        class="book-item">
+                        <img
+                            :src="book.image"
+                            alt="Book Image"
+                            class="book-image"
+                            width="150"
+                            height="150" />
+                        <div class="book-info">
+                            <p class="book-title">
+                                {{ book.title }}
+                            </p>
+                            <p class="book-author">
+                                {{ book.author }}
+                            </p>
+                            <p class="book-description">
+                                {{ book.description }}
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div v-else class="no-books">
+                <p>Henüz kitap eklememişsiniz.</p>
+            </div>
+            <div v-if="userFavorites().length" class="favorites-section">
+                <h3 class="section-title">Favoriler</h3>
+                <p>Favori kitap sayısı: {{ userFavorites().length }}</p>
+                <ul>
+                    <li
+                        @click="router.push('book/' + favorite.id)"
                         v-for="favorite in userFavorites()"
                         :key="favorite.id"
                         class="favorite-item">
@@ -59,7 +93,7 @@
                             </p>
                         </div>
                         <button
-                            @click="removeFavorite(favorite.id)"
+                            @click.stop="removeFavorite(favorite.id)"
                             class="remove-btn">
                             Sil
                         </button>
@@ -69,18 +103,16 @@
             <div v-else class="no-favorites">
                 <p>Favorileriniz bulunmamaktadır.</p>
             </div>
-            <div v-if="userBooks().length" class="books-section">
-                <h3 class="section-title">Eklenen/Düzenlenen Kitaplar</h3>
-                <ul>
-                    <li v-for="book in userBooks()" :key="book.id">
-                        {{ book.title }}
-                    </li>
-                </ul>
-            </div>
             <div v-if="getUserComments().length" class="comments-section">
                 <h3 class="section-title">Yorumlar</h3>
+                <p>Yorum sayısı: {{ getUserComments().length }}</p>
                 <ul>
                     <li
+                        @click="
+                            router.push(
+                                'book/' + getBookById(comment.bookId).id
+                            )
+                        "
                         v-for="comment in getUserComments()"
                         :key="comment.id"
                         class="comment-item">
@@ -98,10 +130,18 @@
                                 {{ getBookById(comment.bookId).author }}
                             </p>
                             <p class="comment-text">{{ comment.text }}</p>
+                            <div class="comment-rating">
+                                <span
+                                    v-for="star in 5"
+                                    :key="star"
+                                    :class="{ filled: star <= comment.rating }"
+                                    >★</span
+                                >
+                            </div>
                         </div>
                         <button
                             class="remove-btn"
-                            @click="removeComment(comment.id)">
+                            @click.stop="removeComment(comment.id)">
                             Sil
                         </button>
                     </li>
@@ -327,11 +367,8 @@ function getBookById(id) {
     margin-left: 10px;
 }
 
-.no-favorites {
-    text-align: center;
-    margin-top: 20px;
-}
-
+.no-favorites,
+.no-books,
 .no-comments {
     text-align: center;
     margin-top: 20px;
@@ -358,7 +395,8 @@ function getBookById(id) {
 }
 
 .comment-item,
-.favorite-item {
+.favorite-item,
+.book-item {
     display: flex;
     align-items: center;
     padding: 15px;
@@ -370,8 +408,9 @@ function getBookById(id) {
 }
 
 .comment-item:hover,
-.favorite-item:hover {
-    background-color: #f1f1f1;
+.favorite-item:hover,
+.book-item:hover {
+    cursor: pointer;
     transform: scale(1.02);
 }
 
@@ -402,6 +441,22 @@ function getBookById(id) {
     font-size: 1rem;
     color: #444;
     line-height: 1.5;
+}
+
+.comment-rating {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f39c12;
+    margin-top: 5px;
+}
+
+.comment-rating span {
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.comment-rating span.filled {
+    color: #f39c12;
 }
 
 /* Responsive Styles */
@@ -457,7 +512,8 @@ function getBookById(id) {
     }
 
     .comment-item,
-    .favorite-item {
+    .favorite-item,
+    .book-item {
         flex-direction: column;
         align-items: flex-start;
         padding: 12px;
@@ -521,7 +577,8 @@ function getBookById(id) {
     }
 
     .comment-item,
-    .favorite-item {
+    .favorite-item,
+    .book-item {
         padding: 10px;
         flex-direction: column;
     }

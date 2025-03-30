@@ -19,7 +19,8 @@
                 v-if="currentUser"
                 @click="toggleFavorite"
                 :class="{ 'favorite-button': isFavorite }">
-                {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
+                <span v-if="isFavorite">❤️ Favorilerden Çıkar</span>
+                <span v-else>🤍 Favorilere Ekle</span>
             </button>
             <button v-if="isOwner" @click="deleteBook" class="delete-button">
                 Kitabı Sil
@@ -65,12 +66,25 @@
                 placeholder="Yayınlanma Yılı"
                 type="number"
                 class="input-field" />
-            <input
-                v-model="editedBook.category"
-                placeholder="Kategori"
-                class="input-field" />
 
-            <select v-model="editedBook.language" id="language" required>
+            <select
+                v-model="editedBook.category"
+                id="category"
+                required
+                class="select-field">
+                <option value="" disabled>Kategori Seçin</option>
+                <option value="roman">Roman</option>
+                <option value="bilim">Bilim</option>
+                <option value="tarih">Tarih</option>
+                <option value="felsefe">Felsefe</option>
+                <option value="sanat">Sanat</option>
+            </select>
+
+            <select
+                v-model="editedBook.language"
+                id="language"
+                required
+                class="select-field">
                 <option value="tr">Türkçe</option>
                 <option value="en">İngilizce</option>
                 <option value="de">Almanca</option>
@@ -82,6 +96,17 @@
                 v-model="editedBook.description"
                 placeholder="Açıklama"
                 class="input-field"></textarea>
+
+            <input
+                v-model="editedBook.isbn"
+                placeholder="ISBN"
+                class="input-field" />
+
+            <input
+                v-model="editedBook.pageNumber"
+                placeholder="Sayfa Sayısı"
+                type="number"
+                class="input-field" />
 
             <div class="button-group">
                 <button @click="isEditing = false" class="cancel-button">
@@ -126,6 +151,8 @@ const editedBook = ref({
     description: book.value?.description || "",
     currency: book.value?.currency || currency.value,
     releaseYear: book.value?.releaseYear || 2025,
+    pageNumber: book.value?.pageNumber || 0,
+    isbn: book.value?.isbn || "",
 });
 
 const currentUser = computed(() => store.state.user.currentUser);
@@ -145,6 +172,10 @@ const handleImageUpload = (e) => {
 };
 
 const toggleFavorite = () => {
+    if (!currentUser.value) {
+        alert("Favorilere eklemek için giriş yapmalısınız.");
+        return;
+    }
     if (isFavorite.value) {
         store.dispatch("favorites/removeFromFavorites", book.value.id);
     } else {
@@ -169,11 +200,12 @@ const updateBook = () => {
 <style scoped>
 .book-container {
     max-width: 600px;
+    width: 90%;
     margin: 20px auto;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: #f8f8f8;
     text-align: center;
 }
 
@@ -200,7 +232,7 @@ const updateBook = () => {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
+    margin: 10px 0;
 }
 
 button {
@@ -295,17 +327,6 @@ input[type="file"] {
     margin-right: auto;
 }
 
-.book-container {
-    max-width: 600px;
-    width: 90%;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    text-align: center;
-}
-
 .book-title {
     font-size: 22px;
     font-weight: bold;
@@ -332,7 +353,6 @@ input[type="file"] {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
 }
 
 button {

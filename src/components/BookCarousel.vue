@@ -4,7 +4,7 @@
             class="carousel-track"
             :style="{
                 transform: `translateX(-${
-                    currentIndex * (100 / itemsPerView)
+                    (currentIndex * 100) / dynamicItemsPerView
                 }%)`,
             }">
             <router-link
@@ -27,15 +27,29 @@ import { ref, onMounted, onUnmounted, computed } from "vue";
 const props = defineProps({
     books: Array,
     autoPlay: Boolean,
-    interval: { type: Number, default: 3000 },
-    itemsPerView: { type: Number, default: 3 },
+    interval: { type: Number, default: 5000 },
+    itemsPerView: { type: Number, default: 4 }, // Default for desktop
 });
 
 const currentIndex = ref(0);
+const dynamicItemsPerView = ref(props.itemsPerView);
 let autoPlayInterval = null;
 
+const updateItemsPerView = () => {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 480) {
+        dynamicItemsPerView.value = 1; // Mobile
+    } else if (screenWidth <= 768) {
+        dynamicItemsPerView.value = 2; // Tablet
+    } else if (screenWidth <= 1024) {
+        dynamicItemsPerView.value = 3; // Large tablet/small desktop
+    } else {
+        dynamicItemsPerView.value = props.itemsPerView; // Desktop (4)
+    }
+};
+
 const totalSlides = computed(() =>
-    Math.ceil(props.books.length / props.itemsPerView)
+    Math.ceil(props.books.length / dynamicItemsPerView.value)
 );
 
 const next = () => {
@@ -48,12 +62,16 @@ const prev = () => {
 };
 
 onMounted(() => {
+    updateItemsPerView();
+    window.addEventListener("resize", updateItemsPerView);
+
     if (props.autoPlay) {
         autoPlayInterval = setInterval(next, props.interval);
     }
 });
 
 onUnmounted(() => {
+    window.removeEventListener("resize", updateItemsPerView);
     if (autoPlayInterval) clearInterval(autoPlayInterval);
 });
 </script>
@@ -63,6 +81,8 @@ onUnmounted(() => {
     position: relative;
     width: 100%;
     overflow: hidden;
+    border-radius: 10px;
+    background-color: #f8f8f8;
 }
 
 .carousel-track {
@@ -71,7 +91,7 @@ onUnmounted(() => {
 }
 
 .carousel-item {
-    flex: 0 0 calc(100% / 3);
+    flex: 0 0 calc(100% / var(--dynamic-items-per-view));
     text-align: center;
     padding: 10px;
     transition: 0.3s;
@@ -97,6 +117,7 @@ onUnmounted(() => {
     cursor: pointer;
     padding: 10px;
     font-size: 24px;
+    z-index: 10;
 }
 
 .prev {
@@ -105,5 +126,30 @@ onUnmounted(() => {
 
 .next {
     right: 10px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 480px) {
+    .carousel-item {
+        flex: 0 0 100%; /* 1 item (mobile) */
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .carousel-item {
+        flex: 0 0 50%; /* 2 items (tablet) */
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .carousel-item {
+        flex: 0 0 33.33%; /* 3 items (large tablet) */
+    }
+}
+
+@media (min-width: 1025px) {
+    .carousel-item {
+        flex: 0 0 25%; /* 4 items (desktop) */
+    }
 }
 </style>

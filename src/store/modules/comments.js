@@ -13,10 +13,18 @@ const mutations = {
         );
         localStorage.setItem("comments", JSON.stringify(state.comments));
     },
+    EDIT_COMMENT(state, { commentId, text, rating }) {
+        const comment = state.comments.find((c) => c.id === commentId);
+        if (comment) {
+            comment.text = text;
+            comment.rating = rating;
+            localStorage.setItem("comments", JSON.stringify(state.comments));
+        }
+    },
 };
 
 const actions = {
-    addComment({ commit, rootState }, { bookId, text }) {
+    addComment({ commit, rootState }, { bookId, text, rating }) {
         const userEmail = rootState.user.currentUser?.email;
         if (!userEmail) return;
 
@@ -25,6 +33,7 @@ const actions = {
             bookId,
             userEmail,
             text,
+            rating,
             timestamp: new Date().toISOString(),
         };
 
@@ -36,6 +45,14 @@ const actions = {
 
         if (comment && comment.userEmail === userEmail) {
             commit("DELETE_COMMENT", commentId);
+        }
+    },
+    editComment({ commit, state, rootState }, { commentId, text, rating }) {
+        const userEmail = rootState.user.currentUser?.email;
+        const comment = state.comments.find((c) => c.id === commentId);
+
+        if (comment && comment.userEmail === userEmail) {
+            commit("EDIT_COMMENT", { commentId, text, rating });
         }
     },
 };
@@ -51,6 +68,18 @@ const getters = {
                   (comment) => comment.userEmail === userEmail
               )
             : [];
+    },
+    getRatingByBookId: (state) => (bookId) => {
+        const bookComments = state.comments.filter(
+            (comment) => comment.bookId == bookId
+        );
+        if (bookComments.length === 0) return 0;
+
+        const totalRating = bookComments.reduce(
+            (acc, comment) => acc + comment.rating,
+            0
+        );
+        return totalRating / bookComments.length;
     },
 };
 
