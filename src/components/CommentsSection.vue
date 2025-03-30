@@ -2,6 +2,27 @@
     <div class="comments-section">
         <h3 class="section-title">Yorumlar</h3>
 
+        <div class="filter-section">
+            <label for="sortOrder">Sırala:</label>
+            <select v-model="sortOrder">
+                <option value="newest">En Yeni</option>
+                <option value="oldest">En Eski</option>
+            </select>
+
+            <label for="filterRating">Puan:</label>
+            <select v-model="filterRating">
+                <option :value="null">Tümü</option>
+                <option v-for="star in 5" :key="star" :value="star">
+                    {{ star }} Yıldız
+                </option>
+            </select>
+
+            <label>
+                <input type="checkbox" v-model="onlyMyComments" />
+                Sadece Benim Yorumlarım
+            </label>
+        </div>
+
         <form
             v-if="currentUser"
             @submit.prevent="handleSubmit"
@@ -18,23 +39,22 @@
                         :class="{
                             active: star <= rating,
                             hover: star <= hoverRating,
-                        }"
-                        >★</span
-                    >
+                        }">
+                        ★
+                    </span>
                 </div>
             </div>
             <textarea
                 v-model="newComment"
                 placeholder="Yorumunuzu yazın..."
                 required
-                class="comment-input">
-            </textarea>
+                class="comment-input"></textarea>
             <button type="submit" class="submit-button">Yorum Ekle</button>
         </form>
 
-        <div v-if="bookComments.length">
+        <div v-if="filteredComments.length">
             <div
-                v-for="comment in bookComments"
+                v-for="comment in filteredComments"
                 :key="comment.id"
                 class="comment">
                 <div v-if="editingComment === comment.id">
@@ -51,9 +71,9 @@
                             :class="{
                                 active: star <= editedRating,
                                 hover: star <= hoverRating,
-                            }"
-                            >★</span
-                        >
+                            }">
+                            ★
+                        </span>
                     </div>
                     <button @click="saveEdit(comment.id)" class="save-button">
                         Kaydet
@@ -94,7 +114,7 @@
             </div>
         </div>
         <div v-else>
-            <p class="no-comments">Henüz yorum eklenmemiş.</p>
+            <p class="no-comments">Eşleşen yorum bulunamadı.</p>
         </div>
     </div>
 </template>
@@ -104,10 +124,6 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
-const editingComment = ref(null);
-const editedText = ref("");
-const editedRating = ref(5);
-
 const store = useStore();
 const route = useRoute();
 
@@ -116,20 +132,49 @@ const rating = ref(5);
 const hoverRating = ref(0);
 const bookId = route.params.id;
 const currentUser = computed(() => store.state.user.currentUser);
+const sortOrder = ref("newest");
+const filterRating = ref(null);
+const onlyMyComments = ref(false);
+const editingComment = ref(null);
+const editedText = ref("");
+const editedRating = ref(5);
+
 const bookComments = computed(() =>
     store.getters["comments/getBookComments"](bookId)
 );
 
+const filteredComments = computed(() => {
+    let comments = [...bookComments.value];
+
+    if (onlyMyComments.value) {
+        comments = comments.filter(
+            (comment) => comment.userEmail === currentUser.value?.email
+        );
+    }
+
+    if (filterRating.value !== null) {
+        comments = comments.filter(
+            (comment) => comment.rating === filterRating.value
+        );
+    }
+
+    comments.sort((a, b) =>
+        sortOrder.value === "newest"
+            ? new Date(b.timestamp) - new Date(a.timestamp)
+            : new Date(a.timestamp) - new Date(b.timestamp)
+    );
+
+    return comments;
+});
+
 const setRating = (star) => {
     rating.value = star;
 };
-
 const startEditing = (comment) => {
     editingComment.value = comment.id;
     editedText.value = comment.text;
     editedRating.value = comment.rating;
 };
-
 const saveEdit = (commentId) => {
     store.dispatch("comments/editComment", {
         commentId,
@@ -138,7 +183,6 @@ const saveEdit = (commentId) => {
     });
     editingComment.value = null;
 };
-
 const handleSubmit = () => {
     store.dispatch("comments/addComment", {
         bookId,
@@ -146,18 +190,13 @@ const handleSubmit = () => {
         rating: rating.value,
     });
     newComment.value = "";
-    rating.value = 5; // Reset to default
+    rating.value = 5;
 };
-
 const deleteComment = (id) => {
     store.dispatch("comments/deleteComment", id);
 };
-
-const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
-};
+const formatDate = (dateString) => new Date(dateString).toLocaleString();
 </script>
-
 <style scoped>
 .comments-section {
     background: #ffffff;
@@ -165,6 +204,7 @@ const formatDate = (dateString) => {
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 600px;
+    width: 90%;
     margin: auto;
 }
 
@@ -173,8 +213,10 @@ const formatDate = (dateString) => {
     font-weight: bold;
     margin-bottom: 15px;
     color: #333;
+    text-align: center;
 }
 
+/* Comment Form */
 .comment-form {
     display: flex;
     flex-direction: column;
@@ -192,14 +234,20 @@ const formatDate = (dateString) => {
     resize: vertical;
 }
 
-.submit-button {
-    background: #007bff;
-    color: white;
+/* Buttons */
+button {
+    margin: 10px;
     padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
+    font-size: 1rem;
+}
+
+.submit-button {
+    background: #007bff;
+    color: white;
 }
 
 .submit-button:hover {
@@ -209,13 +257,6 @@ const formatDate = (dateString) => {
 .edit-button {
     background: #ffc107;
     color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: 0.3s;
-    margin: 5px;
 }
 
 .edit-button:hover {
@@ -225,13 +266,6 @@ const formatDate = (dateString) => {
 .save-button {
     background: #28a745;
     color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: 0.3s;
-    margin: 5px;
 }
 
 .save-button:hover {
@@ -241,19 +275,22 @@ const formatDate = (dateString) => {
 .cancel-button {
     background: #6c757d;
     color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: 0.3s;
-    margin: 5px;
 }
 
 .cancel-button:hover {
     background: #545b62;
 }
 
+.delete-button {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-button:hover {
+    background: #a71d2a;
+}
+
+/* Comments */
 .comment {
     background: #f9f9f9;
     padding: 10px;
@@ -272,22 +309,6 @@ const formatDate = (dateString) => {
     color: #666;
 }
 
-.delete-button {
-    background: #dc3545;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    transition: 0.3s;
-    margin: 12px;
-}
-
-.delete-button:hover {
-    background: #a71d2a;
-}
-
 .no-comments {
     text-align: center;
     font-size: 1rem;
@@ -295,6 +316,7 @@ const formatDate = (dateString) => {
     margin-top: 10px;
 }
 
+/* Rating Section */
 .rating-container {
     display: flex;
     align-items: center;
@@ -331,5 +353,97 @@ const formatDate = (dateString) => {
 
 .comment-rating span.filled {
     color: #f39c12;
+}
+
+/* Filter Section */
+.filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: center;
+    text-align: center;
+}
+
+.filter-section label {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.filter-section select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .comments-section {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .comment-form {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .rating-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .filter-section {
+        flex-direction: column;
+    }
+
+    .stars span {
+        font-size: 1.3rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .comments-section {
+        width: 100%;
+        padding: 10px;
+        border-radius: 0;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    .comment-input {
+        font-size: 0.9rem;
+        min-height: 60px;
+    }
+
+    .stars span {
+        font-size: 1.2rem;
+    }
+
+    .comment-text {
+        font-size: 0.9rem;
+    }
+
+    .comment-meta {
+        font-size: 0.8rem;
+    }
+
+    .filter-section {
+        flex-direction: column;
+    }
+
+    button {
+        font-size: 0.85rem;
+        padding: 6px;
+    }
 }
 </style>

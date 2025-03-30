@@ -72,8 +72,27 @@
             <div v-if="userBooks().length" class="books-section">
                 <h3 class="section-title">Eklenen/Düzenlenen Kitaplar</h3>
                 <ul>
-                    <li v-for="book in userBooks()" :key="book.id">
-                        {{ book.title }}
+                    <li
+                        v-for="book in userBooks()"
+                        :key="book.id"
+                        class="book-item">
+                        <img
+                            :src="book.image"
+                            alt="Book Image"
+                            class="book-image"
+                            width="150"
+                            height="150" />
+                        <div class="book-info">
+                            <p class="book-title">
+                                {{ book.title }}
+                            </p>
+                            <p class="book-author">
+                                {{ book.author }}
+                            </p>
+                            <p class="book-description">
+                                {{ book.description }}
+                            </p>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -366,7 +385,9 @@ function getBookById(id) {
 }
 
 .comment-item,
-.favorite-item {
+.favorite-item,
+.book-item,
+.book-item {
     display: flex;
     align-items: center;
     padding: 15px;
@@ -378,7 +399,9 @@ function getBookById(id) {
 }
 
 .comment-item:hover,
-.favorite-item:hover {
+.favorite-item,
+.book-item:hover,
+.book-item:hover {
     background-color: #f1f1f1;
     transform: scale(1.02);
 }
@@ -481,7 +504,8 @@ function getBookById(id) {
     }
 
     .comment-item,
-    .favorite-item {
+    .favorite-item,
+    .book-item {
         flex-direction: column;
         align-items: flex-start;
         padding: 12px;
@@ -545,7 +569,8 @@ function getBookById(id) {
     }
 
     .comment-item,
-    .favorite-item {
+    .favorite-item,
+    .book-item {
         padding: 10px;
         flex-direction: column;
     }
