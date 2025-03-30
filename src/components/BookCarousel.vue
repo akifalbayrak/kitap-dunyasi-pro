@@ -4,7 +4,7 @@
             class="carousel-track"
             :style="{
                 transform: `translateX(-${
-                    currentIndex * (100 / itemsPerView)
+                    (currentIndex * 150) / props.itemsPerView
                 }%)`,
             }">
             <router-link
@@ -27,7 +27,7 @@ import { ref, onMounted, onUnmounted, computed } from "vue";
 const props = defineProps({
     books: Array,
     autoPlay: Boolean,
-    interval: { type: Number, default: 3000 },
+    interval: { type: Number, default: 5000 },
     itemsPerView: { type: Number, default: 3 },
 });
 

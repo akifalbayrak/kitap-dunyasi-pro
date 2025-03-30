@@ -310,7 +310,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import BookCarousel from "@/components/BookCarousel.vue";
 
@@ -378,9 +378,9 @@ const uniqueCategories = computed(() => {
     return Array.from(categories);
 });
 
-// Featured books for carousel (first 5 books)
+// Featured books for carousel (first 12 books)
 const featuredBooks = computed(() => {
-    return books.value.slice(0, 5);
+    return books.value.slice(0, 12);
 });
 
 // Filter and sort books

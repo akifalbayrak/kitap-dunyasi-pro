@@ -37,6 +37,38 @@
                     </button>
                 </div>
             </div>
+            <div v-if="userBooks().length" class="books-section">
+                <h3 class="section-title">Eklenen/ Düzenlenen Kitaplar</h3>
+                <p>Kitap sayısı: {{ userBooks().length }}</p>
+                <ul>
+                    <li
+                        @click="router.push('book/' + book.id)"
+                        v-for="book in userBooks()"
+                        :key="book.id"
+                        class="book-item">
+                        <img
+                            :src="book.image"
+                            alt="Book Image"
+                            class="book-image"
+                            width="150"
+                            height="150" />
+                        <div class="book-info">
+                            <p class="book-title">
+                                {{ book.title }}
+                            </p>
+                            <p class="book-author">
+                                {{ book.author }}
+                            </p>
+                            <p class="book-description">
+                                {{ book.description }}
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div v-else class="no-books">
+                <p>Henüz kitap eklememişsiniz.</p>
+            </div>
             <div v-if="userFavorites().length" class="favorites-section">
                 <h3 class="section-title">Favoriler</h3>
                 <p>Favori kitap sayısı: {{ userFavorites().length }}</p>
@@ -70,35 +102,6 @@
             </div>
             <div v-else class="no-favorites">
                 <p>Favorileriniz bulunmamaktadır.</p>
-            </div>
-            <div v-if="userBooks().length" class="books-section">
-                <h3 class="section-title">Eklenen/ Düzenlenen Kitaplar</h3>
-                <p>Kitap sayısı: {{ userBooks().length }}</p>
-                <ul>
-                    <li
-                        @click="router.push('book/' + book.id)"
-                        v-for="book in userBooks()"
-                        :key="book.id"
-                        class="book-item">
-                        <img
-                            :src="book.image"
-                            alt="Book Image"
-                            class="book-image"
-                            width="150"
-                            height="150" />
-                        <div class="book-info">
-                            <p class="book-title">
-                                {{ book.title }}
-                            </p>
-                            <p class="book-author">
-                                {{ book.author }}
-                            </p>
-                            <p class="book-description">
-                                {{ book.description }}
-                            </p>
-                        </div>
-                    </li>
-                </ul>
             </div>
             <div v-if="getUserComments().length" class="comments-section">
                 <h3 class="section-title">Yorumlar</h3>
@@ -364,11 +367,8 @@ function getBookById(id) {
     margin-left: 10px;
 }
 
-.no-favorites {
-    text-align: center;
-    margin-top: 20px;
-}
-
+.no-favorites,
+.no-books,
 .no-comments {
     text-align: center;
     margin-top: 20px;
