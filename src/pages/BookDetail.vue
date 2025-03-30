@@ -227,7 +227,7 @@ const updateBook = () => {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
+    margin: 10px 0;
 }
 
 button {
@@ -359,7 +359,6 @@ input[type="file"] {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
 }
 
 button {

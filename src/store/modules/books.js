@@ -81,7 +81,7 @@ const mutations = {
     },
     DELETE_BOOK(state, { bookId, email }) {
         state.books = state.books.filter(
-            (book) => book.id !== bookId && book.email === email
+            (book) => book.id !== bookId || book.email !== email
         );
         localStorage.setItem("books", JSON.stringify(state.books));
     },
