@@ -204,7 +204,6 @@
                             class="book-hover-overlay"
                             :class="{ active: hoveredBook === book.id }">
                             <button
-                                v-if="logged"
                                 class="favorite-btn"
                                 @click.prevent="toggleFavorite(book)"
                                 :class="{ favorited: isFavorite(book.id) }">
@@ -314,7 +313,7 @@ import BookCarousel from "@/components/BookCarousel.vue";
 
 const store = useStore();
 const books = computed(() => store.state.books.books);
-const logged = computed(() => store.getters["user/isAuthenticated"]);
+const currentUser = computed(() => store.state.user.currentUser);
 const currency = computed(() => store.getters["currency/baseCurrency"]);
 const getRatingByBookId = (bookId) => {
     return store.getters["comments/getRatingByBookId"](bookId);
@@ -477,6 +476,10 @@ const isFavorite = (bookId) => {
 
 // Toggle favorite status
 const toggleFavorite = (book) => {
+    if (!currentUser.value) {
+        alert("Favorilere eklemek için giriş yapmalısınız.");
+        return;
+    }
     if (isFavorite(book.id)) {
         store.dispatch("favorites/removeFromFavorites", book.id);
     } else {

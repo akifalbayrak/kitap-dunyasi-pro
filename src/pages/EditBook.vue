@@ -32,6 +32,7 @@ const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
+const currentUser = computed(() => store.state.user.currentUser);
 const books = computed(() => store.state.books.books);
 const book = computed(() =>
     books.value.find((book) => book.id == route.params.id)
@@ -42,6 +43,10 @@ const isFavorite = computed(() =>
 );
 
 const toggleFavorite = () => {
+    if (!currentUser.value) {
+        alert("Favorilere eklemek için giriş yapmalısınız.");
+        return;
+    }
     if (isFavorite.value) {
         store.dispatch("favorites/removeFromFavorites", book.value.id);
     } else {

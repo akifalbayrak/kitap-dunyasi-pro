@@ -172,6 +172,10 @@ const handleImageUpload = (e) => {
 };
 
 const toggleFavorite = () => {
+    if (!currentUser.value) {
+        alert("Favorilere eklemek için giriş yapmalısınız.");
+        return;
+    }
     if (isFavorite.value) {
         store.dispatch("favorites/removeFromFavorites", book.value.id);
     } else {
