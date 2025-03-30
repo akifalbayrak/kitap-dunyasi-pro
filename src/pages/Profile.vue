@@ -393,7 +393,6 @@ function getBookById(id) {
 
 .comment-item,
 .favorite-item,
-.book-item,
 .book-item {
     display: flex;
     align-items: center;
@@ -406,10 +405,9 @@ function getBookById(id) {
 }
 
 .comment-item:hover,
-.favorite-item,
-.book-item:hover,
+.favorite-item:hover,
 .book-item:hover {
-    background-color: #f1f1f1;
+    cursor: pointer;
     transform: scale(1.02);
 }
 
