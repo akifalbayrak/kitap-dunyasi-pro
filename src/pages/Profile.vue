@@ -41,6 +41,7 @@
                 <h3 class="section-title">Favoriler</h3>
                 <ul>
                     <li
+                        @click="router.push('book/' + favorite.id)"
                         v-for="favorite in userFavorites()"
                         :key="favorite.id"
                         class="favorite-item">
@@ -73,6 +74,7 @@
                 <h3 class="section-title">Eklenen/Düzenlenen Kitaplar</h3>
                 <ul>
                     <li
+                        @click="router.push('book/' + book.id)"
                         v-for="book in userBooks()"
                         :key="book.id"
                         class="book-item">
@@ -100,6 +102,11 @@
                 <h3 class="section-title">Yorumlar</h3>
                 <ul>
                     <li
+                        @click="
+                            router.push(
+                                'book/' + getBookById(comment.bookId).id
+                            )
+                        "
                         v-for="comment in getUserComments()"
                         :key="comment.id"
                         class="comment-item">
