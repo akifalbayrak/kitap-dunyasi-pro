@@ -96,6 +96,27 @@
                 </select>
             </div>
 
+            <!-- Page Number -->
+            <div class="form-group">
+                <label for="pageNumber">Sayfa Sayısı</label>
+                <input
+                    v-model.number="pageNumber"
+                    id="pageNumber"
+                    placeholder="Sayfa Sayısı"
+                    type="number"
+                    required />
+            </div>
+
+            <!-- ISBN Number -->
+            <div class="form-group">
+                <label for="isbn">ISBN Numarası</label>
+                <input
+                    v-model="isbn"
+                    id="isbn"
+                    placeholder="ISBN Numarası"
+                    required />
+            </div>
+
             <div class="form-group">
                 <button type="submit" class="submit-button">Ekle</button>
             </div>
@@ -119,6 +140,8 @@ const category = ref("");
 const description = ref("");
 const language = ref("tr");
 const releaseYear = ref(2025);
+const pageNumber = ref(0);
+const isbn = ref("");
 const router = useRouter();
 
 const triggerFileInput = () => {
@@ -145,7 +168,9 @@ const addBook = () => {
         category.value &&
         description.value &&
         language.value &&
-        releaseYear.value
+        releaseYear.value &&
+        pageNumber.value > 0 &&
+        isbn.value
     ) {
         const newBook = {
             id: Date.now(),
@@ -158,6 +183,8 @@ const addBook = () => {
             currency: currency.value,
             language: language.value,
             releaseYear: releaseYear.value,
+            pageNumber: pageNumber.value,
+            isbn: isbn.value,
         };
         store.dispatch("books/addBook", newBook);
         title.value = "";
@@ -168,6 +195,8 @@ const addBook = () => {
         description.value = "";
         language.value = "tr";
         releaseYear.value = 2025;
+        pageNumber.value = 0;
+        isbn.value = "";
         router.push("/");
     }
 };

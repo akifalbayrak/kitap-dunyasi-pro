@@ -38,6 +38,8 @@ const state = {
             image: `https://picsum.photos/seed/tarih-${i}/400/600`,
             email: `user${(i + 30) % 20}@example.com`,
             releaseYear: 2020 + i,
+            page: 300 + i * 10,
+            ISBN: `978-3-16-148410-${i}`,
         })),
         ...Array.from({ length: 5 }, (_, i) => ({
             id: Date.now() + 35 + i,
@@ -51,6 +53,8 @@ const state = {
             image: `https://picsum.photos/seed/felsefe-${i}/400/600`,
             email: `user${(i + 35) % 20}@example.com`,
             releaseYear: 2025 + i,
+            page: 250 + i * 5,
+            ISBN: `988-3-16-148410-${i + 1}`,
         })),
         ...Array.from({ length: 5 }, (_, i) => ({
             id: Date.now() + 40 + i,
@@ -64,6 +68,8 @@ const state = {
             image: `https://picsum.photos/seed/sanat-${i}/400/600`,
             email: `user${(i + 40) % 20}@example.com`,
             releaseYear: 2030 + i,
+            page: 200 + i * 15,
+            ISBN: `998-3-16-148410-${i + 2}`,
         })),
     ],
 };

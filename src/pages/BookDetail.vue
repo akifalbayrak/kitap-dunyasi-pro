@@ -96,6 +96,17 @@
                 placeholder="Açıklama"
                 class="input-field"></textarea>
 
+            <input
+                v-model="editedBook.isbn"
+                placeholder="ISBN"
+                class="input-field" />
+
+            <input
+                v-model="editedBook.pageNumber"
+                placeholder="Sayfa Sayısı"
+                type="number"
+                class="input-field" />
+
             <div class="button-group">
                 <button @click="isEditing = false" class="cancel-button">
                     İptal
@@ -139,6 +150,8 @@ const editedBook = ref({
     description: book.value?.description || "",
     currency: book.value?.currency || currency.value,
     releaseYear: book.value?.releaseYear || 2025,
+    pageNumber: book.value?.pageNumber || 0,
+    isbn: book.value?.isbn || "",
 });
 
 const currentUser = computed(() => store.state.user.currentUser);
