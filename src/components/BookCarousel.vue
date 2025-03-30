@@ -81,6 +81,8 @@ onUnmounted(() => {
     position: relative;
     width: 100%;
     overflow: hidden;
+    border-radius: 10px;
+    background-color: #f8f8f8;
 }
 
 .carousel-track {

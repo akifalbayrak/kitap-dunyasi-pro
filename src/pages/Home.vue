@@ -685,6 +685,9 @@ onUnmounted(() => {
 .books-container {
     display: grid;
     gap: 20px;
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .books-container.grid {

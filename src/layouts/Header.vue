@@ -18,12 +18,12 @@
                     >Giriş Yap</router-link
                 >
                 <router-link
-                    to="/"
                     v-if="user"
+                    to="/"
                     @click="logout"
-                    class="nav-link logout">
-                    Çıkış Yap
-                </router-link>
+                    class="nav-link logout"
+                    >Çıkış Yap</router-link
+                >
                 <select
                     v-model="currency"
                     @input="changeCurrency"
@@ -35,6 +35,13 @@
                         {{ option }}
                     </option>
                 </select>
+
+                <!-- Theme toggle button -->
+                <button @click="toggleTheme" class="theme-toggle-btn">
+                    {{
+                        theme === "light" ? "Switch to Dark" : "Switch to Light"
+                    }}
+                </button>
             </nav>
         </div>
     </header>
@@ -42,27 +49,37 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 const store = useStore();
 const user = computed(() => store.getters["user/getUser"]);
 const logout = () => store.dispatch("user/logout");
 const currency = computed(() => store.getters["currency/baseCurrency"]);
 const currencyOptions = computed(() => store.getters["currency/listCurrency"]);
+const theme = computed(() => store.getters["ui/theme"]);
 
 const changeCurrency = (e) => {
     store.dispatch("currency/changeBaseCurrency", e.target.value);
     store.dispatch("books/updateBooksCurrency");
 };
 
-onMounted(() => {
-    store.dispatch("currency/fetchRates");
-});
+// Toggle theme between light and dark
+const toggleTheme = () => {
+    const newTheme = theme.value === "light" ? "dark" : "light";
+    store.dispatch("ui/setTheme", newTheme);
+};
 
+// Handle menu toggle on mobile
 const isMenuOpen = ref(false);
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
 };
+
+onMounted(() => {
+    store.dispatch("currency/fetchRates");
+});
+
+onUnmounted(() => {});
 </script>
 
 <style scoped>
@@ -88,6 +105,20 @@ const toggleMenu = () => {
     font-weight: bold;
     color: #ecf0f1;
     text-decoration: none;
+}
+
+.theme-toggle-btn {
+    background-color: #16a085;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    background-color: #1abc9c;
 }
 
 .nav-links {

@@ -200,11 +200,12 @@ const updateBook = () => {
 <style scoped>
 .book-container {
     max-width: 600px;
+    width: 90%;
     margin: 20px auto;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: #f8f8f8;
     text-align: center;
 }
 
@@ -324,17 +325,6 @@ input[type="file"] {
     display: block;
     margin-left: auto;
     margin-right: auto;
-}
-
-.book-container {
-    max-width: 600px;
-    width: 90%;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    text-align: center;
 }
 
 .book-title {
