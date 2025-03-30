@@ -37,26 +37,58 @@
                 v-for="comment in bookComments"
                 :key="comment.id"
                 class="comment">
-                <p class="comment-text">{{ comment.text }}</p>
-                <p class="comment-rating">
-                    <span
-                        v-for="star in 5"
-                        :key="star"
-                        :class="{ filled: star <= comment.rating }"
-                        >★</span
+                <div v-if="editingComment === comment.id">
+                    <textarea
+                        v-model="editedText"
+                        class="comment-input"></textarea>
+                    <div class="stars">
+                        <span
+                            v-for="star in 5"
+                            :key="star"
+                            @click="editedRating = star"
+                            :class="{
+                                active: star <= editedRating,
+                                hover: star <= hoverRating,
+                            }"
+                            >★</span
+                        >
+                    </div>
+                    <button @click="saveEdit(comment.id)" class="save-button">
+                        Kaydet
+                    </button>
+                    <button
+                        @click="editingComment = null"
+                        class="cancel-button">
+                        İptal
+                    </button>
+                </div>
+                <div v-else>
+                    <p class="comment-text">{{ comment.text }}</p>
+                    <p class="comment-rating">
+                        <span
+                            v-for="star in 5"
+                            :key="star"
+                            :class="{ filled: star <= comment.rating }"
+                            >★</span
+                        >
+                    </p>
+                    <small class="comment-meta"
+                        >{{ comment.userEmail }} -
+                        {{ formatDate(comment.timestamp) }}</small
                     >
-                </p>
-                <small class="comment-meta">
-                    {{ comment.userEmail }} -
-                    {{ formatDate(comment.timestamp) }}
-                </small>
-
-                <button
-                    v-if="comment.userEmail === currentUser?.email"
-                    @click="deleteComment(comment.id)"
-                    class="delete-button">
-                    Sil
-                </button>
+                    <button
+                        v-if="currentUser?.email === comment.userEmail"
+                        @click="startEditing(comment)"
+                        class="edit-button">
+                        Düzenle
+                    </button>
+                    <button
+                        v-if="comment.userEmail === currentUser?.email"
+                        @click="deleteComment(comment.id)"
+                        class="delete-button">
+                        Sil
+                    </button>
+                </div>
             </div>
         </div>
         <div v-else>
@@ -70,11 +102,15 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
+const editingComment = ref(null);
+const editedText = ref("");
+const editedRating = ref(5);
+
 const store = useStore();
 const route = useRoute();
 
 const newComment = ref("");
-const rating = ref(5); // Default 5 stars
+const rating = ref(5);
 const hoverRating = ref(0);
 const bookId = route.params.id;
 const currentUser = computed(() => store.state.user.currentUser);
@@ -84,6 +120,21 @@ const bookComments = computed(() =>
 
 const setRating = (star) => {
     rating.value = star;
+};
+
+const startEditing = (comment) => {
+    editingComment.value = comment.id;
+    editedText.value = comment.text;
+    editedRating.value = comment.rating;
+};
+
+const saveEdit = (commentId) => {
+    store.dispatch("comments/editComment", {
+        commentId,
+        text: editedText.value,
+        rating: editedRating.value,
+    });
+    editingComment.value = null;
 };
 
 const handleSubmit = () => {
@@ -151,6 +202,54 @@ const formatDate = (dateString) => {
 
 .submit-button:hover {
     background: #0056b3;
+}
+
+.edit-button {
+    background: #ffc107;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: 0.3s;
+    margin: 5px;
+}
+
+.edit-button:hover {
+    background: #d39e00;
+}
+
+.save-button {
+    background: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: 0.3s;
+    margin: 5px;
+}
+
+.save-button:hover {
+    background: #1e7e34;
+}
+
+.cancel-button {
+    background: #6c757d;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: 0.3s;
+    margin: 5px;
+}
+
+.cancel-button:hover {
+    background: #545b62;
 }
 
 .comment {
