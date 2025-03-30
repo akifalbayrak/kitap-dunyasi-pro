@@ -5,7 +5,8 @@
         <p>Fiyat: {{ convertedPrice }} {{ selectedCurrency }}</p>
 
         <button @click="toggleFavorite">
-            {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
+            <span v-if="isFavorite">❤️ Favorilerden Çıkar</span>
+            <span v-else>🤍 Favorilere Ekle</span>
         </button>
 
         <button @click="deleteBook" class="text-red-500">Kitabı Sil</button>

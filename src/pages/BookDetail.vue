@@ -19,7 +19,8 @@
                 v-if="currentUser"
                 @click="toggleFavorite"
                 :class="{ 'favorite-button': isFavorite }">
-                {{ isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle" }}
+                <span v-if="isFavorite">❤️ Favorilerden Çıkar</span>
+                <span v-else>🤍 Favorilere Ekle</span>
             </button>
             <button v-if="isOwner" @click="deleteBook" class="delete-button">
                 Kitabı Sil
