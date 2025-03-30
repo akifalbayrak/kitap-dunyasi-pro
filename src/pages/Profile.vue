@@ -39,6 +39,7 @@
             </div>
             <div v-if="userFavorites().length" class="favorites-section">
                 <h3 class="section-title">Favoriler</h3>
+                <p>Favori kitap sayısı: {{ userFavorites().length }}</p>
                 <ul>
                     <li
                         @click="router.push('book/' + favorite.id)"
@@ -60,7 +61,7 @@
                             </p>
                         </div>
                         <button
-                            @click="removeFavorite(favorite.id)"
+                            @click.stop="removeFavorite(favorite.id)"
                             class="remove-btn">
                             Sil
                         </button>
@@ -71,7 +72,8 @@
                 <p>Favorileriniz bulunmamaktadır.</p>
             </div>
             <div v-if="userBooks().length" class="books-section">
-                <h3 class="section-title">Eklenen/Düzenlenen Kitaplar</h3>
+                <h3 class="section-title">Eklenen/ Düzenlenen Kitaplar</h3>
+                <p>Kitap sayısı: {{ userBooks().length }}</p>
                 <ul>
                     <li
                         @click="router.push('book/' + book.id)"
@@ -100,6 +102,7 @@
             </div>
             <div v-if="getUserComments().length" class="comments-section">
                 <h3 class="section-title">Yorumlar</h3>
+                <p>Yorum sayısı: {{ getUserComments().length }}</p>
                 <ul>
                     <li
                         @click="
@@ -135,7 +138,7 @@
                         </div>
                         <button
                             class="remove-btn"
-                            @click="removeComment(comment.id)">
+                            @click.stop="removeComment(comment.id)">
                             Sil
                         </button>
                     </li>
