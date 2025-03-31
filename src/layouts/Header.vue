@@ -39,7 +39,9 @@
                 <!-- Theme toggle button -->
                 <button @click="toggleTheme" class="theme-toggle-btn">
                     {{
-                        theme === "light" ? "Switch to Dark" : "Switch to Light"
+                        theme === "light"
+                            ? "Karanlık Moda Geç"
+                            : "Aydınlık Moda Geç"
                     }}
                 </button>
             </nav>
